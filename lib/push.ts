@@ -75,13 +75,14 @@ export async function notifyUsers(userIds: string[], title: string, body: string
 /** Kirim web push ke semua perangkat staff yang mengaktifkan notifikasi. */
 export async function notifyStaff(title: string, body: string, url = '/admin/orders', type = 'order') {
   const admin = createAdminClient()
-  const { data: staff } = await admin
+  const { data: staff, error: staffError } = await admin
     .from('profiles')
     .select('id')
     .in('role', ['staff', 'manager', 'admin'])
     .is('blocked_at', null)
-  const ids = (staff ?? []).map((x) => x.id as string)
-  return notifyUsers(ids, title, body, url, type)
+  if (staffError) return { sent: 0, failed: 0, removed: 0, configured: configured(), subscriptions: 0, staff: 0 }
+  const ids = [...new Set((staff ?? []).map((x) => x.id as string))]
+  return { ...(await notifyUsers(ids, title, body, url, type)), staff: ids.length }
 }
 
 export async function getPushSubscriptionSummary(userIds?: string[]) {

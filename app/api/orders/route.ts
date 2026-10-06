@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   const { data: o } = await admin.from('orders').select('order_number,total_idr').eq('id', orderId).maybeSingle()
   try {
     const { notifyStaff } = await import('@/lib/push')
-    await notifyStaff('Pesanan baru', `${o?.order_number ?? ''} · masuk dari ${address.recipient_name}`, `/admin/orders/${orderId}`)
+    await notifyStaff('Pesanan baru', `${o?.order_number ?? ''} · masuk dari ${address.recipient_name}`, `/admin/orders/${orderId}`, 'new_order')
   } catch {}
 
   return ok({ orderId, orderNumber: o?.order_number, total: o?.total_idr })

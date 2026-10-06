@@ -9,6 +9,7 @@ import { ORDER_LABEL, ORDER_TONE, PAYMENT_LABEL, PAYMENT_TONE } from '@/lib/stat
 import { Badge } from '@/components/ui'
 import { Empty, Panel, StatCard } from '@/components/admin/ui'
 import type { OrderStatus } from '@/types'
+import { AdminPushReminder } from '@/components/admin/push-reminder'
 
 export default async function AdminDashboard() {
   const profile = await requireRole(STAFF)
@@ -39,6 +40,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-5">
+      <AdminPushReminder />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Pesanan baru" value={newOrders.count ?? 0} hint={(newOrders.count ?? 0) > 0 ? 'Perlu dikonfirmasi' : 'Semua sudah ditangani'} tone={(newOrders.count ?? 0) > 0 ? 'warn' : 'neutral'} href="/admin/orders?status=new" icon={ClipboardList} />
         <StatCard label="Pesanan hari ini" value={valid.length} hint={`Nilai ${rupiah(valid.reduce((s, o) => s + Number(o.total_idr), 0))}`} href="/admin/orders" icon={ShoppingBag} />

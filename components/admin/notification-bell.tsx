@@ -9,7 +9,7 @@ import { Sheet } from '@/components/sheet'
 import { useToast } from '@/lib/toast'
 import { PushToggle } from '@/components/admin/push-toggle'
 
-const ICON: Record<string, typeof Bell> = { new_order: Package, payment_proof: Wallet, low_stock: TriangleAlert }
+const ICON: Record<string, typeof Bell> = { new_order: Package, payment_proof: Wallet, low_stock: TriangleAlert, order_update: Package }
 
 export function NotificationBell() {
   const toast = useToast()

@@ -56,5 +56,9 @@ export function dbError(message: string, fallback = 'Terjadi kesalahan. Coba lag
   }
   if (/duplicate key.*sku/i.test(message)) return 'SKU sudah dipakai produk lain.'
   if (/duplicate key.*slug/i.test(message)) return 'Alamat produk/kategori (slug) sudah dipakai.'
+  if (/violates foreign key|foreign key constraint/i.test(message)) return 'Data terkait pesanan tidak lengkap. Coba muat ulang lalu ulangi.'
+  if (/violates check constraint|check constraint/i.test(message)) return 'Data pesanan tidak memenuhi aturan sistem. Coba muat ulang lalu ulangi.'
+  if (/null value in column/i.test(message)) return 'Ada data pesanan yang belum lengkap. Coba muat ulang lalu ulangi.'
+  if (/permission denied|not allowed/i.test(message)) return 'Aksi ini tidak diizinkan untuk akun ini.'
   return fallback
 }
