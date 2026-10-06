@@ -59,7 +59,8 @@ async function sendToSubscriptions(subs: PushSubscriptionRow[], payload: { title
 }
 
 export async function notifyUsers(userIds: string[], title: string, body: string, url = '/', type = 'general') {
-  if (!userIds.length || !configured()) return { sent: 0, failed: 0, removed: 0, configured: configured() }
+  const isConfigured = configured()
+  if (!userIds.length || !isConfigured) return { sent: 0, failed: 0, removed: 0, configured: isConfigured, subscriptions: 0 }
   const admin = createAdminClient()
   const subs: PushSubscriptionRow[] = []
   for (let i = 0; i < userIds.length; i += 500) {
@@ -67,7 +68,8 @@ export async function notifyUsers(userIds: string[], title: string, body: string
     const { data } = await admin.from('push_subscriptions').select('id,user_id,endpoint,p256dh,auth').in('user_id', batch)
     subs.push(...((data ?? []) as PushSubscriptionRow[]))
   }
-  return sendToSubscriptions(subs, { title, body, url, type })
+  const result = await sendToSubscriptions(subs, { title, body, url, type })
+  return { ...result, subscriptions: subs.length }
 }
 
 /** Kirim web push ke semua perangkat staff yang mengaktifkan notifikasi. */
@@ -81,3 +83,13 @@ export async function notifyStaff(title: string, body: string, url = '/admin/ord
   const ids = (staff ?? []).map((x) => x.id as string)
   return notifyUsers(ids, title, body, url, type)
 }
+
+export async function getPushSubscriptionSummary(userIds?: string[]) {
+  if (!configured()) return { configured: false, subscriptions: 0 }
+  const admin = createAdminClient()
+  let q = admin.from('push_subscriptions').select('id', { count: 'exact', head: true })
+  if (userIds?.length) q = q.in('user_id', userIds)
+  const { count } = await q
+  return { configured: true, subscriptions: count ?? 0 }
+}
+

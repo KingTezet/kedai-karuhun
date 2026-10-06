@@ -1,3 +1,5 @@
+export const runtime = 'nodejs'
+
 import { z } from 'zod'
 import { fail, guard, ok, parseBody } from '@/lib/api'
 import { ADMIN } from '@/lib/permissions'
@@ -78,8 +80,15 @@ export async function POST(req: Request) {
     broadcastId: broadcast.id,
     recipients: userIds.length,
     inAppInserted,
+    pushSubscriptions: push.subscriptions ?? 0,
     pushSent: push.sent,
     pushFailed: push.failed,
+    pushRemoved: push.removed,
     pushConfigured: push.configured,
+    pushDiagnostic: !push.configured
+      ? 'Server push belum dikonfigurasi. Pastikan NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, dan VAPID_SUBJECT ada di environment Vercel.'
+      : push.subscriptions === 0
+        ? 'Tidak ada device push yang tersimpan di database. Buka menu Notifikasi di akun customer dan aktifkan ulang agar subscription tersinkron.'
+        : undefined,
   })
 }

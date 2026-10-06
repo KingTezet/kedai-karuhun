@@ -21,7 +21,7 @@ export function BroadcastForm() {
   const [body, setBody] = useState('')
   const [href, setHref] = useState('')
   const [busy, setBusy] = useState(false)
-  const [result, setResult] = useState<{ recipients: number; pushSent: number; pushFailed: number } | null>(null)
+  const [result, setResult] = useState<{ recipients: number; pushSubscriptions: number; pushSent: number; pushFailed: number; pushConfigured: boolean; pushDiagnostic?: string } | null>(null)
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +34,7 @@ export function BroadcastForm() {
       })
       const json = await res.json().catch(() => ({}))
       if (!res.ok || !json.ok) throw new Error(json.error || 'Broadcast gagal dikirim.')
-      setResult({ recipients: json.recipients, pushSent: json.pushSent, pushFailed: json.pushFailed })
+      setResult({ recipients: json.recipients, pushSubscriptions: json.pushSubscriptions ?? 0, pushSent: json.pushSent, pushFailed: json.pushFailed, pushConfigured: !!json.pushConfigured, pushDiagnostic: json.pushDiagnostic })
       toast.success('Broadcast berhasil dikirim')
       setTitle(''); setBody(''); setHref('')
     } catch (err) {
@@ -80,7 +80,13 @@ export function BroadcastForm() {
           </div>
         </div>
 
-        {result && <div className="rounded-2xl border border-green-300 bg-green-50 p-4 text-sm text-green-900"><b>Broadcast terkirim.</b> {result.recipients} pelanggan menerima notifikasi di inbox. Push berhasil dikirim ke {result.pushSent} perangkat{result.pushFailed ? `, ${result.pushFailed} perangkat gagal` : ''}.</div>}
+        {result && (
+          <div className={`rounded-2xl border p-4 text-sm ${result.pushConfigured && result.pushSent > 0 ? 'border-green-300 bg-green-50 text-green-900' : 'border-amber-300 bg-amber-50 text-amber-950'}`}>
+            <b>Broadcast tersimpan.</b> {result.recipients} pelanggan menerima notifikasi di inbox.
+            {' '}Ditemukan {result.pushSubscriptions} device push, berhasil dikirim ke {result.pushSent} device{result.pushFailed ? `, ${result.pushFailed} gagal` : ''}.
+            {result.pushDiagnostic && <p className="mt-2 font-semibold">{result.pushDiagnostic}</p>}
+          </div>
+        )}
         <button className="btn-primary btn-lg w-full sm:w-auto" disabled={busy || title.trim().length < 2 || body.trim().length < 2}>
           {busy ? <><Spinner /> Mengirim...</> : <><Send size={18} /> Kirim broadcast sekarang</>}
         </button>

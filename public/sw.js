@@ -1,5 +1,5 @@
-/* Kedai Karuhun service worker - v10 */
-const VERSION = 'kk-v10'
+/* Kedai Karuhun service worker - v11 */
+const VERSION = 'kk-v11'
 const STATIC = `${VERSION}-static`
 const PRECACHE = ['/offline', '/branding/logo.svg']
 
@@ -59,13 +59,14 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   const target = (event.notification.data && event.notification.data.url) || '/'
+  const absoluteTarget = new URL(target, self.location.origin).href
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
       for (const c of list) {
-        if ('navigate' in c) c.navigate(target)
+        if ('navigate' in c) c.navigate(absoluteTarget)
         if ('focus' in c) return c.focus()
       }
-      return self.clients.openWindow(target)
+      return self.clients.openWindow(absoluteTarget)
     }),
   )
 })

@@ -26,8 +26,25 @@ export function PushToggle({ audience = 'customer' }: { audience?: Audience }) {
     if (ios && !standalone) return setState('needs-install')
     if (Notification.permission === 'denied') return setState('denied')
     navigator.serviceWorker.ready
-      .then((r) => r.pushManager.getSubscription())
-      .then((s) => setState(s ? 'on' : 'off'))
+      .then(async (r) => {
+        await r.update().catch(() => {})
+        return r.pushManager.getSubscription()
+      })
+      .then(async (s) => {
+        if (!s) {
+          setState('off')
+          return
+        }
+        const json = s.toJSON()
+        if (!json.endpoint || !json.keys) throw new Error('Invalid push subscription')
+        const sync = await fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ endpoint: json.endpoint, keys: json.keys, user_agent: navigator.userAgent.slice(0, 300) }),
+        })
+        if (!sync.ok) throw new Error('Subscription sync failed')
+        setState('on')
+      })
       .catch(() => setState('unsupported'))
   }, [key])
 
