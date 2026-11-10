@@ -19,7 +19,7 @@ export function ProductCard({ product, priority, className }: { product: Product
   return (
     <article
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-xl border border-line/70 bg-white shadow-card transition hover:-translate-y-0.5 hover:shadow-hover',
+        'group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-white transition hover:shadow-hover',
         className,
       )}
     >
@@ -30,20 +30,20 @@ export function ProductCard({ product, priority, className }: { product: Product
             name={product.name}
             priority={priority}
             sizes="(min-width:1280px) 16vw, (min-width:1024px) 20vw, (min-width:640px) 31vw, 47vw"
-            className={out ? 'opacity-50 grayscale' : 'transition duration-300 group-hover:scale-[1.04]'}
+            className={out ? 'opacity-50 grayscale' : ''}
           />
           {out && (
             <div className="absolute inset-0 grid place-items-center">
-              <span className="rounded-full bg-ink/75 px-3 py-1.5 text-[12px] font-bold text-white">Stok habis</span>
+              <span className="rounded bg-ink/80 px-2.5 py-1 text-[12px] font-semibold text-white">Stok habis</span>
             </div>
           )}
           {product.is_featured && !out && (
-            <span className="absolute left-0 top-2 rounded-r-md bg-brand-600 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Pilihan</span>
+            <span className="absolute left-2 top-2 rounded bg-white/95 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700 shadow-sm">Pilihan</span>
           )}
         </div>
         <div className="flex flex-1 flex-col px-2.5 pb-1 pt-2 sm:px-3">
           <p className="line-clamp-2 min-h-[2.5rem] text-[13px] leading-[1.25rem] text-ink sm:text-[14px]">{product.name}</p>
-          <p className="mt-1 text-[15px] font-extrabold text-ink sm:text-base">
+          <p className="mt-1 text-[15px] font-bold text-ink sm:text-base">
             {rupiah(product.price_idr)}
             <span className="ml-1 text-[11px] font-medium text-ink-muted">/{product.unit}</span>
           </p>

@@ -3,9 +3,9 @@ import { ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const ICON_TONE = {
-  neutral: 'bg-sky-50 text-sky-600',
-  warn: 'bg-accent-50 text-accent-600',
-  good: 'bg-brand-50 text-brand-600',
+  neutral: 'bg-cream-100 text-ink-soft',
+  warn: 'bg-cream-100 text-accent-600',
+  good: 'bg-cream-100 text-brand-600',
 } as const
 
 export function StatCard({
@@ -24,7 +24,7 @@ export function StatCard({
   icon?: React.ComponentType<{ size?: number }>
 }) {
   const inner = (
-    <div className={cn('card relative h-full overflow-hidden p-4 transition sm:p-5', href && 'hover:-translate-y-0.5 hover:shadow-hover')}>
+    <div className={cn('card relative h-full overflow-hidden p-4 transition sm:p-5', href && 'hover:border-cream-300 hover:shadow-card')}>
       {tone === 'warn' && <span className="absolute inset-y-0 left-0 w-1 bg-accent-500" aria-hidden />}
       <div className="flex items-start justify-between gap-2">
         <p className="text-[12px] font-semibold text-ink-muted sm:text-[13px]">{label}</p>

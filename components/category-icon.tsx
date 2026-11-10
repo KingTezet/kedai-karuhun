@@ -90,12 +90,6 @@ export function categoryIcon(slug: string, name = '', customName?: string | null
   return ShoppingBasket
 }
 
-const TINTS = [
-  'bg-brand-100 text-brand-700',
-  'bg-accent-100 text-accent-700',
-  'bg-sky-100 text-sky-700',
-  'bg-rose-100 text-rose-700',
-  'bg-amber-100 text-amber-800',
-  'bg-violet-100 text-violet-700',
-]
-export const categoryTint = (i: number) => TINTS[i % TINTS.length]
+/** Latar ikon kategori: netral & seragam (bukan warna-warni) agar terlihat rapi. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const categoryTint = (_i?: number) => 'border border-line bg-cream-50 text-brand-700'

@@ -45,6 +45,11 @@ const config: Config = {
         },
         line: '#E5E7EB',
       },
+      fontWeight: {
+        // Tebal maksimum 700 agar tampilan lebih kalem & profesional
+        extrabold: '700',
+        black: '700',
+      },
       fontFamily: {
         sans: [
           'var(--font-sans)',

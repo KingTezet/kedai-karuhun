@@ -34,7 +34,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={c.image_url} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
                   ) : (
-                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${categoryTint(i)}`}><Icon size={22} /></span>
+                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${categoryTint(i)}`}><Icon size={20} strokeWidth={1.6} /></span>
                   )}
                   <span className="text-[13px] font-semibold leading-tight">{c.name}</span>
                 </Link>

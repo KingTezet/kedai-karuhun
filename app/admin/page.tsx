@@ -41,16 +41,16 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-4 sm:space-y-5">
       <AdminPushReminder />
-      <section className="flex flex-col gap-3 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 p-5 text-white shadow-card sm:flex-row sm:items-center sm:justify-between">
+      <section className="card flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[13px] text-white/80">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' })}</p>
-          <h2 className="mt-0.5 text-xl font-extrabold text-white sm:text-2xl">Halo, {(profile.full_name || 'Admin').split(/\s+/)[0]} 👋</h2>
-          <p className="mt-0.5 text-[13px] text-white/85">{(newOrders.count ?? 0) > 0 ? `Ada ${newOrders.count} pesanan baru menunggu konfirmasi.` : 'Semua pesanan sudah ditangani. Mantap!'}</p>
+          <p className="text-[13px] text-ink-muted">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' })}</p>
+          <h2 className="mt-0.5 text-xl font-bold sm:text-2xl">Halo, {(profile.full_name || 'Admin').split(/\s+/)[0]}</h2>
+          <p className="mt-0.5 text-[13px] text-ink-muted">{(newOrders.count ?? 0) > 0 ? `Ada ${newOrders.count} pesanan baru menunggu konfirmasi.` : 'Semua pesanan sudah ditangani. Mantap!'}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {can.processOrders(profile.role) && <Link href="/admin/orders?status=new" className="btn-sm btn bg-white text-brand-700 hover:bg-white/90"><ClipboardList size={16} /> Proses pesanan</Link>}
-          {can.manageProducts(profile.role) && <Link href="/admin/products/new" className="btn-sm btn bg-white/15 text-white hover:bg-white/25"><PackagePlus size={16} /> Tambah produk</Link>}
-          {can.manageStock(profile.role) && <Link href="/admin/inventory" className="btn-sm btn bg-white/15 text-white hover:bg-white/25"><Boxes size={16} /> Stok</Link>}
+          {can.processOrders(profile.role) && <Link href="/admin/orders?status=new" className="btn-primary btn-sm"><ClipboardList size={16} /> Proses pesanan</Link>}
+          {can.manageProducts(profile.role) && <Link href="/admin/products/new" className="btn-secondary btn-sm"><PackagePlus size={16} /> Tambah produk</Link>}
+          {can.manageStock(profile.role) && <Link href="/admin/inventory" className="btn-secondary btn-sm"><Boxes size={16} /> Stok</Link>}
         </div>
       </section>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -68,13 +68,13 @@ export default async function AdminDashboard() {
         <div className="space-y-5">
           <Panel title="Perlu ditangani" action={<PanelLink href="/admin/orders?status=new">Lihat semua</PanelLink>}>
             {(newOrders.data ?? []).length === 0 ? (
-              <Empty text="Tidak ada pesanan baru. Kerja bagus! 🎉" />
+              <Empty text="Tidak ada pesanan baru." />
             ) : (
               <ul className="divide-y divide-line">
                 {(newOrders.data ?? []).map((o) => (
                   <li key={o.id}>
                     <Link href={`/admin/orders/${o.id}`} className="-mx-2 flex min-h-[64px] items-center gap-3 rounded-lg px-2 py-2 hover:bg-cream-50">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent-50 text-accent-600"><PackageCheck size={20} /></span>
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cream-100 text-ink-soft"><PackageCheck size={19} strokeWidth={1.8} /></span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-[14px] font-bold">{o.order_number}</span>
                         <span className="block truncate text-[13px] text-ink-muted">{(o.address_snapshot as { recipient_name?: string })?.recipient_name} · {timeAgo(o.created_at)}</span>

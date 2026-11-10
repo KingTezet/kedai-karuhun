@@ -15,16 +15,16 @@ export function EmptyState({
   action,
   className,
 }: {
-  icon: React.ComponentType<{ size?: number; className?: string }>
+  icon: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>
   title: string
   text?: string
   action?: { label: string; href: string }
   className?: string
 }) {
   return (
-    <div className={cn('flex flex-col items-center rounded-xl border border-line/70 bg-white px-6 py-14 text-center shadow-card', className)}>
-      <div className="grid h-20 w-20 place-items-center rounded-full bg-brand-50 text-brand-600">
-        <Icon size={36} />
+    <div className={cn('flex flex-col items-center rounded-lg border border-line bg-white px-6 py-14 text-center', className)}>
+      <div className="grid h-20 w-20 place-items-center rounded-full bg-cream-100 text-ink-faint">
+        <Icon size={36} strokeWidth={1.4} />
       </div>
       <h2 className="mt-4 text-[17px] font-extrabold">{title}</h2>
       {text && <p className="mt-1 max-w-sm text-[14px] text-ink-muted">{text}</p>}
@@ -87,16 +87,11 @@ export function ProductImage({
   if (!src) {
     return (
       <div
-        className={cn('relative grid h-full w-full place-items-center bg-gradient-to-br from-cream-50 to-cream-200', className)}
+        className={cn('relative grid h-full w-full place-items-center bg-cream-100', className)}
         role="img"
         aria-label={`${name} (foto belum tersedia)`}
       >
-        <div className="flex flex-col items-center gap-1 text-ink-faint">
-          <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-xl font-extrabold text-brand-600 shadow-card">
-            {name.trim().charAt(0).toUpperCase()}
-          </span>
-          <ImageOff size={14} aria-hidden />
-        </div>
+        <ImageOff size={28} strokeWidth={1.4} className="text-ink-faint/70" aria-hidden />
       </div>
     )
   }

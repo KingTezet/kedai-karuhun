@@ -155,7 +155,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
       }
       track('create_order', { transaction_id: json.orderNumber, value: json.total, currency: 'IDR', payment_type: method })
       cart.clear()
-      toast.success('Pesanan berhasil dibuat 🎉', { description: json.orderNumber })
+      toast.success('Pesanan berhasil dibuat', { description: json.orderNumber })
       router.replace(`/orders/${json.orderId}?baru=1`)
     } catch {
       setFormError('Koneksi bermasalah. Periksa internet lalu coba lagi.')

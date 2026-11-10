@@ -19,7 +19,6 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <div className="page flex justify-center py-8 sm:py-14">
       <div className="card w-full max-w-md overflow-hidden p-0">
-        <div className="h-1.5 bg-gradient-to-r from-brand-600 to-accent-500" aria-hidden />
         <div className="p-6 sm:p-8">
         <h1 className="text-xl font-extrabold sm:text-2xl">Masuk ke {settings?.store_name || 'Kedai Karuhun'}</h1>
         <p className="mb-6 mt-1 text-[15px] text-ink-muted">Gunakan nomor HP dan password. Tidak perlu email untuk masuk atau membuat akun.</p>

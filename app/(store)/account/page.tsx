@@ -29,11 +29,11 @@ export default async function AccountPage() {
       <PageHeader title="Akun saya" />
       <div className="grid gap-5 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="space-y-5">
-          <section className="flex items-center gap-4 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 p-5 text-white shadow-card">
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-white text-2xl font-extrabold text-brand-700 ring-4 ring-white/30">{initial}</span>
+          <section className="card flex items-center gap-4 p-5">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-cream-100 text-xl font-bold text-ink-soft">{initial}</span>
             <div className="min-w-0">
-              <p className="line-clamp-1 text-lg font-extrabold text-white">{name || 'Lengkapi nama kamu'}</p>
-              <p className="line-clamp-1 text-[14px] text-white/85">{profile?.phone || user.phone || 'Nomor HP belum diatur'}</p>
+              <p className="line-clamp-1 text-lg font-bold">{name || 'Lengkapi nama kamu'}</p>
+              <p className="line-clamp-1 text-[14px] text-ink-muted">{profile?.phone || user.phone || 'Nomor HP belum diatur'}</p>
             </div>
           </section>
 

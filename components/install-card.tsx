@@ -19,8 +19,8 @@ export function InstallCard({ always }: { always?: boolean }) {
 
   if (installed || hidden || (!canPrompt && !isIOS)) return null
   return (
-    <div className="card relative flex items-center gap-3 border-brand-200 bg-brand-50 p-4">
-      <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand-600 text-white">
+    <div className="card relative flex items-center gap-3 p-4">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-cream-100 text-ink-soft">
         <Download size={24} />
       </span>
       <div className="min-w-0 flex-1">

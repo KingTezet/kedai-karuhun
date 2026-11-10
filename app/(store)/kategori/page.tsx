@@ -16,12 +16,12 @@ export default async function KategoriPage() {
           const Icon = categoryIcon(c.slug, c.name, c.icon_name)
           return (
             <li key={c.id}>
-              <Link href={`/kategori/${c.slug}`} className="card flex h-full flex-col items-center gap-2.5 p-4 text-center transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-hover active:scale-[.99]">
+              <Link href={`/kategori/${c.slug}`} className="card flex h-full flex-col items-center gap-2.5 p-4 text-center transition hover:border-brand-400 hover:shadow-card">
                 {c.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={c.image_url} alt="" className="h-16 w-16 shrink-0 rounded-2xl object-cover" />
+                  <img src={c.image_url} alt="" className="h-16 w-16 shrink-0 rounded-full border border-line object-cover" />
                 ) : (
-                  <span className={`grid h-16 w-16 shrink-0 place-items-center rounded-2xl ${categoryTint(i)}`}><Icon size={30} /></span>
+                  <span className={`grid h-16 w-16 shrink-0 place-items-center rounded-full ${categoryTint(i)}`}><Icon size={28} strokeWidth={1.6} /></span>
                 )}
                 <span className="min-w-0">
                   <span className="block text-[14px] font-bold">{c.name}</span>

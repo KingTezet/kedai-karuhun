@@ -1,5 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronRight, Clock, HandCoins, MapPin, MessageCircle, ShieldCheck, ShoppingBasket, Store, Truck, Wallet } from 'lucide-react'
+import { ChevronRight, Clock, HandCoins, Info, MapPin, MessageCircle, ShieldCheck, Truck } from 'lucide-react'
 import { getCategories, getReorderProducts, getSettings, queryProducts } from '@/lib/store'
 import { getCurrentProfile } from '@/lib/auth'
 import { ProductGrid, ProductRail } from '@/components/product-card'
@@ -22,31 +23,31 @@ export default async function HomePage() {
 
   const slides: HeroSlide[] = [
     {
-      eyebrow: first ? `Halo, ${first}` : 'Selamat datang',
-      title: 'Belanja harian, diantar sampai rumah',
-      text: `Sayur, buah, telur, dan sembako dari ${storeName}. Pesan dari HP, kami yang antar.`,
+      eyebrow: first ? `Halo, ${first}` : storeName,
+      title: 'Sayur & buah segar, diantar ke rumah',
+      text: 'Pilihan segar setiap hari. Pesan dari HP, kurir toko yang antar.',
       cta: 'Belanja sekarang',
       href: '/products',
-      tone: 'brand',
-      icon: <ShoppingBasket strokeWidth={1.4} />,
+      image: '/banners/hero-produce.jpg',
+      alt: 'Aneka sayur dan buah segar di pasar',
     },
     {
-      eyebrow: 'Bayar mudah',
-      title: 'QRIS, transfer, atau bayar di tempat',
-      text: 'Pilih cara bayar yang paling nyaman saat checkout.',
+      eyebrow: 'Kebutuhan dapur',
+      title: 'Lengkapi stok dapur tanpa keluar rumah',
+      text: 'Sembako, telur, bumbu, dan kebutuhan harian dalam satu keranjang.',
+      cta: 'Lihat kategori',
+      href: '/kategori',
+      image: '/banners/hero-shelf.jpg',
+      alt: 'Rak sayuran segar tertata rapi',
+    },
+    {
+      eyebrow: settings?.order_notice ? 'Info toko' : 'Pembayaran',
+      title: settings?.order_notice ? 'Pengumuman dari toko' : 'Bayar pakai QRIS, transfer, atau COD',
+      text: settings?.order_notice || 'Pilih metode pembayaran yang paling nyaman saat checkout.',
       cta: 'Mulai belanja',
       href: '/products',
-      tone: 'accent',
-      icon: <Wallet strokeWidth={1.4} />,
-    },
-    {
-      eyebrow: settings?.order_notice ? 'Info toko' : 'Diantar toko',
-      title: settings?.order_notice ? 'Pengumuman dari toko' : 'Kurir langsung dari toko kami',
-      text: settings?.order_notice || settings?.open_hours || 'Pantau status pesananmu langsung dari aplikasi.',
-      cta: 'Lihat pesanan',
-      href: '/orders',
-      tone: 'dark',
-      icon: <Truck strokeWidth={1.4} />,
+      image: '/banners/hero-kitchen.jpg',
+      alt: 'Bahan masakan segar di atas meja',
     },
   ]
 
@@ -58,15 +59,15 @@ export default async function HomePage() {
       <section className="grid gap-3 lg:grid-cols-[1fr_300px]" aria-label="Promo">
         <HeroCarousel slides={slides} />
         <div className="hidden grid-rows-2 gap-3 lg:grid">
-          <PromoTile href="/kategori" title="Jelajahi kategori" text={`${categories.length} kategori kebutuhan harian`} icon={<Store size={30} />} className="bg-brand-50 text-brand-800" />
-          <PromoTile href="/orders" title="Lacak pesanan" text="Cek status pengantaran kapan saja" icon={<Truck size={30} />} className="bg-accent-50 text-accent-700" />
+          <PromoTile href="/kategori" title="Jelajahi kategori" text={`${categories.length} kategori kebutuhan harian`} image="/banners/tile-aisle.jpg" />
+          <PromoTile href="/orders" title="Lacak pesanan" text="Pantau status pengantaran" image="/banners/tile-groceries.jpg" />
         </div>
       </section>
 
       {settings?.order_notice && (
-        <div className="flex items-start gap-3 rounded-xl border border-accent-100 bg-accent-50 px-4 py-3 text-[14px] text-accent-700">
-          <Store size={18} className="mt-0.5 shrink-0" />
-          <p className="font-semibold">{settings.order_notice}</p>
+        <div className="flex items-start gap-3 rounded-lg border border-line bg-white px-4 py-3 text-[14px] text-ink-soft">
+          <Info size={18} className="mt-0.5 shrink-0 text-brand-600" />
+          <p>{settings.order_notice}</p>
         </div>
       )}
 
@@ -81,13 +82,13 @@ export default async function HomePage() {
                   <Link href={`/kategori/${c.slug}`} className="group flex flex-col items-center gap-1.5 text-center">
                     {c.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.image_url} alt="" className="h-14 w-14 rounded-2xl object-cover transition group-hover:scale-105 sm:h-16 sm:w-16" />
+                      <img src={c.image_url} alt="" className="h-14 w-14 rounded-full border border-line object-cover transition group-hover:border-brand-400 sm:h-16 sm:w-16" />
                     ) : (
-                      <span className={`grid h-14 w-14 place-items-center rounded-2xl transition group-hover:scale-105 sm:h-16 sm:w-16 ${categoryTint(i)}`}>
-                        <Icon size={26} />
+                      <span className={`grid h-14 w-14 place-items-center rounded-full transition group-hover:border-brand-400 sm:h-16 sm:w-16 ${categoryTint(i)}`}>
+                        <Icon size={24} strokeWidth={1.6} />
                       </span>
                     )}
-                    <span className="line-clamp-2 text-[11px] font-semibold leading-tight text-ink-soft sm:text-[12px]">{c.name}</span>
+                    <span className="line-clamp-2 text-[11px] leading-tight text-ink-soft group-hover:text-brand-700 sm:text-[12px]">{c.name}</span>
                   </Link>
                 </li>
               )
@@ -98,7 +99,7 @@ export default async function HomePage() {
 
       {/* Pilihan hari ini */}
       {picks.length > 0 && (
-        <Panel id="pilihan" title="Pilihan hari ini" subtitle="Produk unggulan pilihan toko" link={{ href: '/products', label: 'Lihat semua' }} accent>
+        <Panel id="pilihan" title="Pilihan hari ini" subtitle="Produk unggulan pilihan toko" link={{ href: '/products', label: 'Lihat semua' }}>
           <ProductRail products={picks} />
         </Panel>
       )}
@@ -166,55 +167,51 @@ function Panel({
   title,
   subtitle,
   link,
-  accent,
   children,
 }: {
   id: string
   title: string
   subtitle?: string
   link?: { href: string; label: string }
-  accent?: boolean
   children: React.ReactNode
 }) {
   return (
-    <section aria-labelledby={id} className="card overflow-hidden">
-      <div className={accent ? 'bg-gradient-to-r from-brand-600 to-brand-500 px-4 py-3 text-white' : 'px-4 pt-4'}>
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h2 id={id} className={accent ? 'text-[17px] font-extrabold text-white sm:text-lg' : 'section-title'}>{title}</h2>
-            {subtitle && <p className={accent ? 'text-[12px] text-white/85' : 'text-[12px] text-ink-muted'}>{subtitle}</p>}
-          </div>
-          {link && (
-            <Link href={link.href} className={accent ? 'inline-flex min-h-[36px] shrink-0 items-center gap-0.5 text-[13px] font-bold text-white' : 'section-link shrink-0'}>
-              {link.label} <ChevronRight size={16} />
-            </Link>
-          )}
+    <section aria-labelledby={id} className="card">
+      <div className="flex items-end justify-between gap-3 px-4 pt-4">
+        <div className="min-w-0">
+          <h2 id={id} className="section-title">{title}</h2>
+          {subtitle && <p className="text-[12px] text-ink-muted">{subtitle}</p>}
         </div>
+        {link && (
+          <Link href={link.href} className="section-link shrink-0">
+            {link.label} <ChevronRight size={16} />
+          </Link>
+        )}
       </div>
       <div className="p-4">{children}</div>
     </section>
   )
 }
 
-function PromoTile({ href, title, text, icon, className }: { href: string; title: string; text: string; icon: React.ReactNode; className: string }) {
+function PromoTile({ href, title, text, image }: { href: string; title: string; text: string; image: string }) {
   return (
-    <Link href={href} className={`flex items-center justify-between gap-3 rounded-xl p-5 transition hover:shadow-hover ${className}`}>
-      <span>
-        <span className="block text-[16px] font-extrabold">{title}</span>
-        <span className="mt-0.5 block text-[12px] opacity-80">{text}</span>
-        <span className="mt-2 inline-flex items-center gap-0.5 text-[12px] font-bold">Buka <ChevronRight size={14} /></span>
+    <Link href={href} className="group relative block overflow-hidden rounded-lg bg-cream-200">
+      <Image src={image} alt="" fill sizes="300px" className="object-cover transition duration-500 group-hover:scale-105" />
+      <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" aria-hidden />
+      <span className="absolute inset-x-0 bottom-0 p-4 text-white">
+        <span className="block text-[15px] font-bold">{title}</span>
+        <span className="mt-0.5 flex items-center gap-0.5 text-[12px] text-white/85">{text} <ChevronRight size={13} /></span>
       </span>
-      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-white/70">{icon}</span>
     </Link>
   )
 }
 
-function InfoTile({ icon: Icon, title, text }: { icon: React.ComponentType<{ size?: number }>; title: string; text: string }) {
+function InfoTile({ icon: Icon, title, text }: { icon: React.ComponentType<{ size?: number; strokeWidth?: number }>; title: string; text: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-line/70 bg-white p-3 shadow-card sm:p-4">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600"><Icon size={20} /></span>
+    <div className="flex items-center gap-3 rounded-lg border border-line bg-white p-3 sm:p-4">
+      <span className="grid h-10 w-10 shrink-0 place-items-center text-brand-600"><Icon size={26} strokeWidth={1.5} /></span>
       <div className="min-w-0">
-        <p className="text-[13px] font-bold leading-tight sm:text-[14px]">{title}</p>
+        <p className="text-[13px] font-semibold leading-tight text-ink sm:text-[14px]">{title}</p>
         <p className="line-clamp-2 text-[11px] text-ink-muted sm:text-[12px]">{text}</p>
       </div>
     </div>
