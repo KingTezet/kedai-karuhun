@@ -18,7 +18,7 @@ export default async function CheckoutPage() {
     sb.from('customer_addresses').select('*').eq('user_id', user.id).order('is_default', { ascending: false }).order('created_at', { ascending: false }),
   ])
   return (
-    <div className="page pb-44 pt-5 sm:pt-8 lg:pb-8">
+    <div className="page pb-28 pt-4 sm:pt-6 lg:pb-8">
       <PageHeader title="Checkout" subtitle="Isi data pengantaran, pilih pembayaran, selesai." back={{ href: '/cart', label: 'Keranjang' }} />
       <CheckoutForm
         profile={{ full_name: profile?.full_name ?? '', phone: profile?.phone ?? '' }}

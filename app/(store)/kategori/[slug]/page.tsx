@@ -7,6 +7,7 @@ import { ProductGrid } from '@/components/product-card'
 import { CatalogFilters } from '@/components/catalog-filters'
 import { Pagination } from '@/components/pagination'
 import { EmptyState, PageHeader } from '@/components/ui'
+import { CatalogSidebar } from '@/components/catalog-sidebar'
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<RawParams> }
 
@@ -33,17 +34,20 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const base = `/kategori/${slug}`
 
   return (
-    <div className="page py-5 sm:py-8">
+    <div className="page grid gap-5 py-4 sm:py-6 lg:grid-cols-[220px_1fr]">
+      <CatalogSidebar categories={categories} active={slug} />
+      <div className="min-w-0">
       <PageHeader title={cat.name} subtitle={cat.description || 'Pilih produk yang kamu butuhkan.'} back={{ href: '/kategori', label: 'Semua kategori' }} />
       <CatalogFilters base={base} query={query} categories={categories} showCategories={false} />
       {result.products.length === 0 ? (
         <EmptyState icon={PackageSearch} title="Belum ada produk" text="Produk di kategori ini sedang disiapkan." action={{ label: 'Lihat produk lain', href: '/products' }} />
       ) : (
         <>
-          <ProductGrid products={result.products} />
+          <ProductGrid products={result.products} dense />
           <Pagination page={result.page} pages={result.pages} hrefFor={(p) => buildHref(base, query, { page: p })} />
         </>
       )}
+      </div>
     </div>
   )
 }

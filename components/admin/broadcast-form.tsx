@@ -65,14 +65,14 @@ export function BroadcastForm() {
         </Field>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-line bg-cream-50 p-4">
+          <div className="rounded-xl border border-line bg-cream-50 p-4">
             <div className="flex items-center gap-2 font-bold"><Sparkles size={18} className="text-brand-600" /> Preview</div>
-            <div className="mt-3 rounded-2xl border border-line bg-white p-4 shadow-card">
+            <div className="mt-3 rounded-xl border border-line bg-white p-4 shadow-card">
               <p className="font-extrabold">{title || 'Judul notifikasi'}</p>
               <p className="mt-1 text-sm text-ink-muted">{body || 'Isi notifikasi akan tampil di sini.'}</p>
             </div>
           </div>
-          <div className="rounded-2xl border border-line bg-cream-50 p-4 text-sm text-ink-muted">
+          <div className="rounded-xl border border-line bg-cream-50 p-4 text-sm text-ink-muted">
             <p className="font-bold text-ink">Yang akan dikirim</p>
             <p className="mt-2">1. Riwayat notifikasi masuk ke akun pelanggan.</p>
             <p className="mt-1">2. Push dikirim ke semua perangkat pelanggan yang sudah mengaktifkan notifikasi.</p>
@@ -81,7 +81,7 @@ export function BroadcastForm() {
         </div>
 
         {result && (
-          <div className={`rounded-2xl border p-4 text-sm ${result.pushConfigured && result.pushSent > 0 ? 'border-green-300 bg-green-50 text-green-900' : 'border-amber-300 bg-amber-50 text-amber-950'}`}>
+          <div className={`rounded-xl border p-4 text-sm ${result.pushConfigured && result.pushSent > 0 ? 'border-green-300 bg-green-50 text-green-900' : 'border-amber-300 bg-amber-50 text-amber-950'}`}>
             <b>Broadcast tersimpan.</b> {result.recipients} pelanggan menerima notifikasi di inbox.
             {' '}Ditemukan {result.pushSubscriptions} device push, berhasil dikirim ke {result.pushSent} device{result.pushFailed ? `, ${result.pushFailed} gagal` : ''}.
             {result.pushDiagnostic && <p className="mt-2 font-semibold">{result.pushDiagnostic}</p>}

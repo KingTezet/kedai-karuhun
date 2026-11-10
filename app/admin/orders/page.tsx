@@ -53,7 +53,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
 
   return (
     <div className="space-y-4">
-      <form className="grid gap-2 sm:grid-cols-[1fr_auto_auto_auto_auto]" role="search">
+      <form className="card grid gap-2 p-3 sm:grid-cols-[1fr_auto_auto_auto_auto] sm:p-4" role="search">
         <label className="relative sm:col-span-1">
           <span className="sr-only">Cari pesanan</span>
           <Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" />
@@ -69,11 +69,17 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
         <button className="btn-primary">Terapkan</button>
       </form>
 
-      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="tablist">
+      <div className="no-scrollbar -mx-4 flex overflow-x-auto border-b border-line bg-white px-2 sm:mx-0 sm:rounded-xl sm:border sm:border-line/70 sm:shadow-card" role="tablist">
         {STATUS_TABS.map(([v, label]) => (
-          <Link key={v} role="tab" aria-selected={status === v} href={href({ status: v, page: undefined })} className={cn('chip', status === v && 'chip-active')}>
+          <Link
+            key={v}
+            role="tab"
+            aria-selected={status === v}
+            href={href({ status: v, page: undefined })}
+            className={cn('flex h-12 shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3.5 text-[13px] font-bold transition', status === v ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-muted hover:text-ink')}
+          >
             {label}
-            {v && tally[v] ? <span className={cn('grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-bold', status === v ? 'bg-white text-brand-700' : v === 'new' ? 'bg-accent-500 text-white' : 'bg-cream-200')}>{tally[v]}</span> : null}
+            {v && tally[v] ? <span className={cn('grid h-5 min-w-5 place-items-center rounded-full px-1 text-[11px] font-bold', v === 'new' ? 'bg-sale-500 text-white' : status === v ? 'bg-brand-100 text-brand-700' : 'bg-cream-200 text-ink-soft')}>{tally[v]}</span> : null}
           </Link>
         ))}
       </div>
@@ -85,7 +91,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
           <ul className="space-y-3 lg:hidden">
             {(data ?? []).map((o) => (
               <li key={o.id}>
-                <Link href={`/admin/orders/${o.id}`} className="card block p-4 active:scale-[.99]">
+                <Link href={`/admin/orders/${o.id}`} className="card block p-4 transition hover:border-brand-300 active:scale-[.99]">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0"><p className="font-extrabold">{o.order_number}</p><p className="truncate text-[14px] text-ink-soft">{(o.address_snapshot as { recipient_name?: string })?.recipient_name}</p></div>
                     <Badge tone={ORDER_TONE[o.status as OrderStatus]}>{ORDER_LABEL[o.status as OrderStatus]}</Badge>
@@ -101,14 +107,14 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
 
           <div className="card hidden overflow-hidden lg:block">
             <table className="w-full text-left text-[14px]">
-              <thead className="bg-cream-100 text-xs uppercase tracking-wide text-ink-muted">
+              <thead className="border-b border-line bg-cream-50 text-[11px] uppercase tracking-wider text-ink-muted">
                 <tr><th className="px-4 py-3">Pesanan</th><th className="px-4 py-3">Pelanggan</th><th className="px-4 py-3">Bayar</th><th className="px-4 py-3">Status</th><th className="px-4 py-3 text-right">Total</th></tr>
               </thead>
               <tbody className="divide-y divide-line">
                 {(data ?? []).map((o) => {
                   const a = o.address_snapshot as { recipient_name?: string; phone?: string }
                   return (
-                    <tr key={o.id} className="hover:bg-cream-100">
+                    <tr key={o.id} className="hover:bg-cream-50">
                       <td className="px-4 py-3"><Link href={`/admin/orders/${o.id}`} className="font-bold text-brand-700 hover:underline">{o.order_number}</Link><p className="text-xs text-ink-muted">{formatDateTime(o.created_at)}</p></td>
                       <td className="px-4 py-3"><p className="font-semibold">{a?.recipient_name}</p><p className="text-xs text-ink-muted">{a?.phone}</p></td>
                       <td className="px-4 py-3"><p>{METHOD_LABEL[o.payment_method as PaymentMethod]}</p><Badge tone={PAYMENT_TONE[o.payment_status as PaymentStatus]} className="mt-1">{PAYMENT_LABEL[o.payment_status as PaymentStatus]}</Badge></td>

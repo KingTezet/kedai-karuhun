@@ -55,7 +55,7 @@ export function ImageUpload({
   return (
     <div>
       <p className="label">{label}</p>
-      <div className={cn('relative w-full overflow-hidden rounded-2xl border-2 border-dashed border-line bg-cream-100', aspect)}>
+      <div className={cn('relative w-full overflow-hidden rounded-xl border-2 border-dashed border-line bg-cream-100', aspect)}>
         {shown ? (
           preview ? (
             // eslint-disable-next-line @next/next/no-img-element

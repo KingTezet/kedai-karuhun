@@ -5,7 +5,7 @@ import { PushToggle } from '@/components/admin/push-toggle'
 
 export function AdminPushReminder() {
   return (
-    <section className="rounded-2xl border border-brand-200 bg-brand-50 p-4 shadow-card">
+    <section className="rounded-xl border border-brand-200 bg-brand-50 p-4 shadow-card">
       <div className="flex items-start gap-3">
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-brand-700">
           <BellRing size={20} />

@@ -64,7 +64,7 @@ export default async function AdminFinance({ searchParams }: { searchParams: Pro
         <AddTransaction today={today} />
       </div>
 
-      <form className="grid gap-2 sm:grid-cols-[auto_auto_1fr_auto]">
+      <form className="card grid gap-2 p-3 sm:grid-cols-[auto_auto_1fr_auto] sm:p-4">
         <input type="hidden" name="r" value="custom" />
         <input type="date" name="from" defaultValue={from} className="input" aria-label="Dari tanggal" />
         <input type="date" name="to" defaultValue={to} className="input" aria-label="Sampai tanggal" />

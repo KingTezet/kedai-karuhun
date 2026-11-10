@@ -63,12 +63,12 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             <dl className="mt-1 space-y-1.5 border-t border-line pt-3 text-[15px]">
               <div className="flex justify-between"><dt className="text-ink-muted">Subtotal</dt><dd className="font-semibold">{rupiah(o.subtotal_idr)}</dd></div>
               <div className="flex justify-between"><dt className="text-ink-muted">Ongkir {a.zone_name ? `(${a.zone_name})` : ''}</dt><dd className="font-semibold">{rupiah(o.delivery_fee_idr)}</dd></div>
-              <div className="flex items-baseline justify-between border-t border-line pt-2"><dt className="font-bold">Total</dt><dd className="text-2xl font-extrabold text-brand-700">{rupiah(o.total_idr)}</dd></div>
+              <div className="flex items-baseline justify-between border-t border-line pt-2"><dt className="font-bold">Total</dt><dd className="text-xl font-extrabold text-brand-700">{rupiah(o.total_idr)}</dd></div>
             </dl>
           </Panel>
 
           <Panel title="Pelanggan & alamat">
-            <p className="text-lg font-bold">{a.recipient_name}</p>
+            <p className="text-[16px] font-extrabold">{a.recipient_name}</p>
             <p className="mt-1 flex items-center gap-2 text-[15px]"><Phone size={16} className="text-brand-600" /> {a.phone}</p>
             <p className="mt-1 flex items-start gap-2 text-[15px]"><MapPin size={16} className="mt-1 shrink-0 text-brand-600" /> <span>{a.address_line}{a.notes ? ` (${a.notes})` : ''}{a.zone_name ? ` — ${a.zone_name}` : ''}</span></p>
             {o.note && <p className="mt-3 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-[14px] text-amber-900"><StickyNote size={16} className="mt-0.5 shrink-0" /> <span><b>Catatan pelanggan:</b> {o.note}</span></p>}
@@ -93,7 +93,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
           </Panel>
         </div>
 
-        <div className="space-y-5 lg:sticky lg:top-24">
+        <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
           <Panel title="Tindakan">
             <OrderActions id={o.id} status={o.status} paymentStatus={o.payment_status} paymentMethod={o.payment_method} waUrl={a.phone ? waLink(a.phone, msg) : null} />
           </Panel>

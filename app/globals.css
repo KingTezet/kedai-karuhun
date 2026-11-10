@@ -23,10 +23,10 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
-    background: #faf6ec;
+    background: #f3f4f6;
   }
   body {
-    @apply bg-cream-100 font-sans text-[16px] leading-relaxed text-ink antialiased;
+    @apply bg-cream-100 font-sans text-[15px] leading-normal text-ink antialiased;
     overflow-x: hidden;
   }
   h1, h2, h3, h4 {
@@ -42,7 +42,7 @@
   :focus-visible {
     outline: 3px solid theme('colors.brand.400');
     outline-offset: 2px;
-    border-radius: 8px;
+    border-radius: 6px;
   }
   img {
     @apply max-w-full;
@@ -62,7 +62,7 @@
 
 @layer components {
   .page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
   .pb-nav {
     padding-bottom: calc(var(--nav-h) + var(--safe-b) + 16px);
@@ -73,28 +73,31 @@
 
   /* Buttons */
   .btn {
-    @apply inline-flex min-h-[44px] select-none items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold transition active:scale-[.98] disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex min-h-[42px] select-none items-center justify-center gap-2 rounded-lg px-4 text-[14px] font-bold transition active:scale-[.98] disabled:pointer-events-none disabled:opacity-50;
   }
   .btn-lg {
-    @apply min-h-[52px] px-6 text-base;
+    @apply min-h-[48px] px-6 text-[15px];
   }
   .btn-sm {
-    @apply min-h-[36px] rounded-lg px-3 text-sm;
+    @apply min-h-[34px] rounded-md px-3 text-[13px];
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700;
+    @apply btn bg-brand-600 text-white hover:bg-brand-700;
   }
   .btn-accent {
-    @apply btn bg-accent-500 text-white shadow-sm hover:bg-accent-600;
+    @apply btn bg-accent-500 text-white hover:bg-accent-600;
   }
   .btn-secondary {
-    @apply btn border border-line bg-white text-ink hover:bg-cream-50;
+    @apply btn border border-cream-300 bg-white text-ink hover:bg-cream-50;
   }
   .btn-soft {
     @apply btn bg-brand-50 text-brand-700 hover:bg-brand-100;
   }
+  .btn-outline {
+    @apply btn border border-brand-600 bg-white text-brand-700 hover:bg-brand-50;
+  }
   .btn-ghost {
-    @apply btn text-ink-soft hover:bg-cream-200;
+    @apply btn text-ink-soft hover:bg-cream-100;
   }
   .btn-danger {
     @apply btn bg-red-600 text-white hover:bg-red-700;
@@ -105,7 +108,7 @@
 
   /* Forms */
   .label {
-    @apply mb-1.5 block text-sm font-semibold text-ink-soft;
+    @apply mb-1.5 block text-[13px] font-bold text-ink-soft;
   }
   .hint {
     @apply mt-1.5 text-[13px] text-ink-muted;
@@ -114,14 +117,14 @@
     @apply mt-1.5 text-[13px] font-semibold text-red-700;
   }
   .input {
-    @apply min-h-[48px] w-full rounded-xl border border-line bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink-faint transition focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:bg-cream-100 disabled:text-ink-muted;
+    @apply min-h-[44px] w-full rounded-lg border border-cream-300 bg-white px-3.5 py-2 text-[15px] text-ink placeholder:text-ink-faint transition focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 disabled:bg-cream-100 disabled:text-ink-muted;
   }
   textarea.input {
     @apply min-h-[96px] resize-y leading-relaxed;
   }
   select.input {
     @apply appearance-none bg-no-repeat pr-10;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235C6962' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-position: right 12px center;
   }
   .input-invalid {
@@ -130,29 +133,29 @@
 
   /* Surfaces */
   .card {
-    @apply rounded-2xl border border-line bg-white shadow-card;
+    @apply rounded-xl border border-line/70 bg-white shadow-card;
   }
   .card-flat {
-    @apply rounded-2xl border border-line bg-white;
+    @apply rounded-xl border border-line bg-white;
   }
   .section-title {
-    @apply text-lg font-bold sm:text-xl;
+    @apply text-[17px] font-extrabold sm:text-xl;
   }
 
   /* Chips & badges */
   .chip {
-    @apply inline-flex min-h-[40px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-white px-4 text-sm font-semibold text-ink-soft transition hover:border-brand-300 hover:bg-brand-50;
+    @apply inline-flex min-h-[36px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border border-cream-300 bg-white px-3.5 text-[13px] font-semibold text-ink-soft transition hover:border-brand-400 hover:text-brand-700;
   }
   .chip-active {
-    @apply border-brand-600 bg-brand-600 text-white hover:border-brand-600 hover:bg-brand-600;
+    @apply border-brand-600 bg-brand-50 text-brand-700 hover:border-brand-600;
   }
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold leading-none;
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold leading-none;
   }
 
   /* Misc */
   .skeleton {
-    @apply rounded-xl bg-cream-200;
+    @apply rounded-lg bg-cream-200;
     background-image: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
     background-size: 400px 100%;
     background-repeat: no-repeat;
@@ -166,5 +169,13 @@
   }
   .divider {
     @apply border-t border-line;
+  }
+  /* Bar aksi menempel di bawah layar HP (PDP, keranjang, checkout) */
+  .bottom-action {
+    @apply fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white px-4 pt-3 shadow-nav lg:hidden;
+    padding-bottom: calc(0.75rem + var(--safe-b));
+  }
+  .section-link {
+    @apply inline-flex min-h-[36px] items-center gap-0.5 text-[13px] font-bold text-brand-600 hover:text-brand-700;
   }
 }

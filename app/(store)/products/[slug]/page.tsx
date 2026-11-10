@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Clock, ShieldCheck, Truck } from 'lucide-react'
+import { ChevronRight, Clock, ShieldCheck, Truck } from 'lucide-react'
 import { getProduct, getRelated, getSettings } from '@/lib/store'
 import { num, rupiah } from '@/lib/utils'
 import { BuyBox, TrackView } from '@/components/buy-box'
-import { ProductGrid } from '@/components/product-card'
+import { ProductGrid, discountOf } from '@/components/product-card'
 import { Badge, ProductImage } from '@/components/ui'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -32,10 +32,7 @@ export default async function ProductPage({ params }: Props) {
   const [related, settings] = await Promise.all([getRelated(product), getSettings()])
   const out = product.stock_quantity <= 0
   const low = !out && product.stock_quantity <= product.low_stock_threshold
-  const discount =
-    product.compare_at_price_idr && product.compare_at_price_idr > product.price_idr
-      ? Math.round((1 - product.price_idr / product.compare_at_price_idr) * 100)
-      : 0
+  const discount = discountOf(product)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -48,64 +45,82 @@ export default async function ProductPage({ params }: Props) {
   }
 
   return (
-    <div className="page pb-44 pt-4 sm:pt-6 lg:pb-8">
+    <div className="page pb-28 pt-3 sm:pt-5 lg:pb-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <TrackView id={product.id} name={product.name} price={product.price_idr} />
 
-      <nav aria-label="Jejak halaman" className="mb-3 flex flex-wrap items-center gap-1 text-sm text-ink-muted">
-        <Link href="/" className="inline-flex min-h-[36px] items-center hover:text-ink">Beranda</Link>
-        <span aria-hidden>›</span>
+      <nav aria-label="Jejak halaman" className="mb-3 flex flex-wrap items-center gap-1.5 text-[13px] text-ink-muted">
+        <Link href="/" className="font-semibold text-brand-600 hover:text-brand-700">Beranda</Link>
+        <ChevronRight size={14} aria-hidden />
         {product.category && (
           <>
-            <Link href={`/kategori/${product.category.slug}`} className="inline-flex min-h-[36px] items-center hover:text-ink">{product.category.name}</Link>
-            <span aria-hidden>›</span>
+            <Link href={`/kategori/${product.category.slug}`} className="font-semibold text-brand-600 hover:text-brand-700">{product.category.name}</Link>
+            <ChevronRight size={14} aria-hidden />
           </>
         )}
-        <span className="line-clamp-1 font-semibold text-ink-soft">{product.name}</span>
+        <span className="line-clamp-1 text-ink-soft">{product.name}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-        <div className="relative aspect-square overflow-hidden rounded-3xl border border-line bg-cream-200 shadow-card">
-          <ProductImage src={product.image_url} name={product.name} priority sizes="(min-width:1024px) 50vw, 100vw" className={out ? 'opacity-60 grayscale' : ''} />
-          {out && <span className="badge absolute left-3 top-3 bg-ink px-3 py-1.5 text-sm text-white">Stok habis</span>}
-          {discount > 0 && !out && <span className="badge absolute left-3 top-3 bg-accent-500 px-3 py-1.5 text-sm text-white">Hemat {discount}%</span>}
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,5fr)_300px] lg:items-start lg:gap-6">
+        {/* Foto */}
+        <div className="-mx-4 sm:mx-0 lg:sticky lg:top-28">
+          <div className="relative aspect-square overflow-hidden bg-white sm:rounded-xl sm:border sm:border-line/70">
+            <ProductImage src={product.image_url} name={product.name} priority sizes="(min-width:1024px) 40vw, 100vw" className={out ? 'opacity-60 grayscale' : ''} />
+            {out && <span className="badge absolute left-3 top-3 bg-ink px-3 py-1.5 text-[12px] text-white">Stok habis</span>}
+          </div>
         </div>
 
-        <div>
-          {product.category && <p className="text-sm font-bold text-brand-700">{product.category.name}</p>}
-          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{product.name}</h1>
-
-          <div className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="text-3xl font-extrabold text-brand-700">{rupiah(product.price_idr)}</span>
-            <span className="text-base text-ink-muted">/ {product.unit}</span>
-            {discount > 0 && <span className="text-base text-ink-faint line-through">{rupiah(product.compare_at_price_idr)}</span>}
-          </div>
-
-          <div className="mt-3">
-            {out ? <Badge tone="bad">Stok habis</Badge> : low ? <Badge tone="warn">Sisa {num(product.stock_quantity)} {product.unit}</Badge> : <Badge tone="good">Tersedia</Badge>}
-          </div>
+        {/* Info */}
+        <div className="space-y-3">
+          <section className="card p-4 sm:p-5">
+            <h1 className="text-[18px] font-bold leading-snug sm:text-[22px]">{product.name}</h1>
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-ink-muted">
+              {product.category && <Link href={`/kategori/${product.category.slug}`} className="hover:text-brand-700">{product.category.name}</Link>}
+              {product.sku && <span>SKU {product.sku}</span>}
+              <span>Satuan: {product.unit}</span>
+            </div>
+            <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="text-[26px] font-extrabold leading-none sm:text-[30px]">{rupiah(product.price_idr)}</span>
+              <span className="text-[14px] text-ink-muted">/ {product.unit}</span>
+            </div>
+            {discount > 0 && (
+              <p className="mt-1.5 flex items-center gap-2 text-[13px]">
+                <span className="rounded bg-sale-50 px-1.5 py-0.5 font-bold text-sale-500">{discount}%</span>
+                <span className="text-ink-faint line-through">{rupiah(product.compare_at_price_idr)}</span>
+              </p>
+            )}
+            <div className="mt-3">
+              {out ? <Badge tone="bad">Stok habis</Badge> : low ? <Badge tone="warn">Sisa {num(product.stock_quantity)} {product.unit}</Badge> : <Badge tone="good">Stok tersedia</Badge>}
+            </div>
+          </section>
 
           {(product.description || product.short_description) && (
-            <div className="mt-5">
-              <h2 className="mb-1 text-base font-bold">Tentang produk</h2>
-              <p className="whitespace-pre-line text-[16px] leading-relaxed text-ink-soft">{product.description || product.short_description}</p>
-            </div>
+            <section className="card p-4 sm:p-5">
+              <h2 className="border-b border-line pb-2 text-[15px] font-extrabold">Detail produk</h2>
+              <p className="mt-3 whitespace-pre-line text-[14px] leading-relaxed text-ink-soft">{product.description || product.short_description}</p>
+            </section>
           )}
 
-          <div className="mt-6 hidden lg:block"><BuyBox product={product} /></div>
+          <section className="card p-4 sm:p-5">
+            <h2 className="border-b border-line pb-2 text-[15px] font-extrabold">Pengiriman & layanan</h2>
+            <ul className="mt-3 space-y-3 text-[14px] text-ink-soft">
+              <li className="flex items-start gap-3"><Truck size={18} className="mt-0.5 shrink-0 text-brand-600" /> Diantar langsung oleh {settings?.store_name || 'Kedai Karuhun'}. Ongkir dihitung saat checkout.</li>
+              <li className="flex items-start gap-3"><ShieldCheck size={18} className="mt-0.5 shrink-0 text-brand-600" /> Harga & stok selalu diperbarui toko.</li>
+              {settings?.open_hours && <li className="flex items-start gap-3"><Clock size={18} className="mt-0.5 shrink-0 text-brand-600" /> {settings.open_hours}</li>}
+            </ul>
+          </section>
+        </div>
 
-          <ul className="mt-6 space-y-3 rounded-2xl border border-line bg-white p-4 text-[15px]">
-            <li className="flex items-start gap-3"><Truck size={20} className="mt-0.5 shrink-0 text-brand-600" /> Diantar langsung oleh {settings?.store_name || 'Kedai Karuhun'}. Ongkir dihitung saat checkout.</li>
-            <li className="flex items-start gap-3"><ShieldCheck size={20} className="mt-0.5 shrink-0 text-brand-600" /> Harga & stok selalu diperbarui toko.</li>
-            {settings?.open_hours && <li className="flex items-start gap-3"><Clock size={20} className="mt-0.5 shrink-0 text-brand-600" /> {settings.open_hours}</li>}
-          </ul>
+        {/* Kotak beli (desktop) */}
+        <div className="hidden lg:sticky lg:top-28 lg:block">
+          <BuyBox product={product} variant="card" />
         </div>
       </div>
 
-      <div className="lg:hidden"><BuyBox product={product} /></div>
+      <BuyBox product={product} variant="bar" />
 
       {related.length > 0 && (
-        <section className="mt-10" aria-labelledby="serupa">
+        <section className="mt-8" aria-labelledby="serupa">
           <h2 id="serupa" className="section-title mb-3">Produk serupa</h2>
           <ProductGrid products={related} />
         </section>

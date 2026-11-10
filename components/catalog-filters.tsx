@@ -56,10 +56,11 @@ export function CatalogFilters({
     setMax('')
   }
 
+  const sortNow = query.sort ?? 'relevan'
   return (
-    <div className="mb-5 flex items-center gap-2">
+    <div className="mb-4">
       {showCategories && (
-        <div className="no-scrollbar -mx-4 flex min-w-0 flex-1 gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="list" aria-label="Kategori">
+        <div className="no-scrollbar -mx-4 mb-2.5 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 lg:hidden" role="list" aria-label="Kategori">
           <Link role="listitem" href={buildHref(base, query, { kategori: undefined, page: undefined })} className={cn('chip', !query.category && 'chip-active')}>
             Semua
           </Link>
@@ -75,10 +76,25 @@ export function CatalogFilters({
           ))}
         </div>
       )}
-      <button onClick={() => setOpen(true)} className={cn('chip ml-auto', activeCount > 0 && 'border-brand-600 bg-brand-50 text-brand-700')} aria-label="Buka filter dan urutan">
-        <SlidersHorizontal size={17} />
-        Filter{activeCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-brand-600 px-1 text-[11px] text-white">{activeCount}</span>}
-      </button>
+      <div className="flex items-center gap-2 rounded-xl border border-line/70 bg-white px-3 py-2 shadow-card">
+        <span className="hidden shrink-0 text-[13px] font-semibold text-ink-muted sm:inline">Urutkan:</span>
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-1.5 overflow-x-auto">
+          {(Object.keys(SORT_LABEL) as SortKey[]).map((k) => (
+            <Link
+              key={k}
+              href={buildHref(base, query, { sort: k !== 'relevan' ? k : undefined, page: undefined })}
+              aria-current={sortNow === k ? 'true' : undefined}
+              className={cn('chip min-h-[32px] px-3 text-[12px]', sortNow === k && 'chip-active')}
+            >
+              {SORT_LABEL[k]}
+            </Link>
+          ))}
+        </div>
+        <button onClick={() => setOpen(true)} className={cn('chip min-h-[32px] shrink-0 px-3 text-[12px]', activeCount > 0 && 'chip-active')} aria-label="Buka filter dan urutan">
+          <SlidersHorizontal size={15} />
+          Filter{activeCount > 0 && <span className="grid h-4 min-w-4 place-items-center rounded-full bg-brand-600 px-1 text-[10px] text-white">{activeCount}</span>}
+        </button>
+      </div>
 
       <Sheet
         open={open}
@@ -110,7 +126,7 @@ export function CatalogFilters({
 
         <label className="mt-5 flex min-h-[52px] cursor-pointer items-center justify-between rounded-xl border border-line px-4">
           <span className="font-semibold">Hanya yang tersedia</span>
-          <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)} className="h-6 w-6 accent-[#2F7D3A]" />
+          <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)} className="h-6 w-6 accent-brand-600" />
         </label>
 
         <fieldset className="mt-5">

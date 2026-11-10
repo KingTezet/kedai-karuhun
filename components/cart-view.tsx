@@ -62,10 +62,10 @@ export function CartView() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+    <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
       <div className="space-y-3">
         {changes.length > 0 && (
-          <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4" role="alert">
+          <div className="rounded-xl border border-amber-300 bg-amber-50 p-4" role="alert">
             <p className="flex items-center gap-2 font-bold text-amber-900"><CircleAlert size={20} /> Keranjang diperbarui</p>
             <ul className="mt-2 space-y-1 text-[14px] text-amber-900">
               {changes.map((c, i) => (
@@ -76,19 +76,27 @@ export function CartView() {
           </div>
         )}
 
-        <ul className="space-y-3">
+        <div className="card overflow-hidden">
+        <div className="flex items-center justify-between border-b border-line px-4 py-3">
+          <p className="text-[14px] font-extrabold">Semua barang <span className="font-semibold text-ink-muted">({cart.count})</span></p>
+          <button onClick={() => setConfirmClear(true)} className="inline-flex items-center gap-1 text-[13px] font-bold text-sale-500 hover:text-sale-600">
+            <Trash2 size={15} /> Hapus semua
+          </button>
+        </div>
+        <ul className="divide-y divide-line">
           {cart.lines.map((l) => {
             const step = stepFor(l.unit)
             return (
-              <li key={l.productId} className="card flex gap-3 p-3">
-                <Link href={`/products/${l.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-cream-200 sm:h-28 sm:w-28">
+              <li key={l.productId} className="flex gap-3 p-4">
+                <Link href={`/products/${l.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-line/70 bg-cream-100 sm:h-24 sm:w-24">
                   <ProductImage src={l.image} name={l.name} sizes="112px" />
                 </Link>
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <Link href={`/products/${l.slug}`} className="line-clamp-2 text-[16px] font-semibold leading-snug">{l.name}</Link>
-                  <p className="text-sm text-ink-muted">{rupiah(l.price)} / {l.unit}</p>
+                  <Link href={`/products/${l.slug}`} className="line-clamp-2 text-[14px] leading-snug hover:text-brand-700">{l.name}</Link>
+                  <p className="mt-0.5 text-[12px] text-ink-muted">{rupiah(l.price)} / {l.unit}</p>
                   <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
                     <Stepper
+                      size="sm"
                       name={l.name}
                       value={l.qty}
                       unit={l.unit}
@@ -97,7 +105,7 @@ export function CartView() {
                       onDec={() => (l.qty <= step ? cart.remove(l.productId) : cart.setQty(l.productId, round2(l.qty - step)))}
                       onInc={() => cart.setQty(l.productId, round2(l.qty + step))}
                     />
-                    <p className="text-[17px] font-extrabold">{rupiah(Math.round(l.price * l.qty))}</p>
+                    <p className="text-[15px] font-extrabold">{rupiah(Math.round(l.price * l.qty))}</p>
                   </div>
                   {l.qty >= l.stock && <p className="mt-1 text-xs font-semibold text-amber-800">Stok tinggal {num(l.stock)} {l.unit}</p>}
                 </div>
@@ -105,27 +113,26 @@ export function CartView() {
             )
           })}
         </ul>
+        </div>
 
-        <button onClick={() => setConfirmClear(true)} className="btn-ghost text-red-700 hover:bg-red-50">
-          <Trash2 size={18} /> Kosongkan keranjang
-        </button>
+        <Link href="/products" className="section-link px-1">+ Tambah barang lain</Link>
       </div>
 
-      <aside className="card hidden p-5 lg:sticky lg:top-24 lg:block">
+      <aside className="card hidden p-5 lg:sticky lg:top-28 lg:block">
         <Summary />
         <Link href="/checkout" className="btn-primary btn-lg mt-5 w-full">
-          Lanjut checkout <ArrowRight size={20} />
+          Beli ({cart.count}) <ArrowRight size={18} />
         </Link>
       </aside>
 
-      <div className="fixed inset-x-0 bottom-[calc(64px+var(--safe-b))] z-40 border-t border-line bg-white p-3 shadow-nav lg:hidden">
+      <div className="bottom-action">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <div className="min-w-0 flex-1 leading-tight">
-            <p className="text-[13px] text-ink-muted">Subtotal ({cart.count} jenis)</p>
-            <p className="text-xl font-extrabold">{rupiah(cart.subtotal)}</p>
+            <p className="text-[12px] text-ink-muted">Total sementara</p>
+            <p className="text-lg font-extrabold">{rupiah(cart.subtotal)}</p>
           </div>
-          <Link href="/checkout" className="btn-primary btn-lg px-6">
-            Checkout <ArrowRight size={20} />
+          <Link href="/checkout" className="btn-primary btn-lg px-7">
+            Beli ({cart.count})
           </Link>
         </div>
       </div>
@@ -162,14 +169,14 @@ function Summary() {
   const cart = useCart()
   return (
     <>
-      <h2 className="text-lg font-bold">Ringkasan</h2>
-      <dl className="mt-3 space-y-2 text-[15px]">
+      <h2 className="text-[15px] font-extrabold">Ringkasan belanja</h2>
+      <dl className="mt-3 space-y-2 text-[14px]">
         <div className="flex justify-between"><dt className="text-ink-muted">Subtotal ({cart.count} jenis)</dt><dd className="font-semibold">{rupiah(cart.subtotal)}</dd></div>
         <div className="flex justify-between"><dt className="text-ink-muted">Ongkos kirim</dt><dd className="text-ink-muted">Dihitung di checkout</dd></div>
       </dl>
       <div className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
-        <span className="font-bold">Total sementara</span>
-        <span className="text-2xl font-extrabold text-brand-700">{rupiah(cart.subtotal)}</span>
+        <span className="font-bold">Total</span>
+        <span className="text-xl font-extrabold">{rupiah(cart.subtotal)}</span>
       </div>
     </>
   )

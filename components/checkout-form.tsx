@@ -172,10 +172,10 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+    <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
       <div className="space-y-3">
         {notice.length > 0 && (
-          <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-900" role="alert">
+          <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900" role="alert">
             <p className="flex items-center gap-2 font-bold"><CircleAlert size={20} /> Keranjang diperbarui</p>
             <ul className="mt-1 text-[14px]">{notice.map((n, i) => <li key={i}>• {n}</li>)}</ul>
           </div>
@@ -199,7 +199,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
           <div className="space-y-3">
             {addresses.map((a) => (
               <label key={a.id} className={cn('flex min-h-[64px] cursor-pointer gap-3 rounded-xl border p-3', addressId === a.id ? 'border-brand-600 bg-brand-50' : 'border-line bg-white')}>
-                <input type="radio" name="addr" className="mt-1 h-5 w-5 accent-[#2F7D3A]" checked={addressId === a.id} onChange={() => { setAddressId(a.id); if (a.zone_id && zones.some((z) => z.id === a.zone_id)) setZoneId(a.zone_id) }} />
+                <input type="radio" name="addr" className="mt-1 h-5 w-5 accent-brand-600" checked={addressId === a.id} onChange={() => { setAddressId(a.id); if (a.zone_id && zones.some((z) => z.id === a.zone_id)) setZoneId(a.zone_id) }} />
                 <span className="min-w-0">
                   <span className="block font-bold">{a.label} <span className="font-normal text-ink-muted">· {a.recipient_name}</span></span>
                   <span className="block text-[14px] text-ink-muted">{a.address_line}</span>
@@ -207,7 +207,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
               </label>
             ))}
             <label className={cn('flex min-h-[56px] cursor-pointer items-center gap-3 rounded-xl border p-3', addressId === 'new' ? 'border-brand-600 bg-brand-50' : 'border-line bg-white')}>
-              <input type="radio" name="addr" className="h-5 w-5 accent-[#2F7D3A]" checked={addressId === 'new'} onChange={() => setAddressId('new')} />
+              <input type="radio" name="addr" className="h-5 w-5 accent-brand-600" checked={addressId === 'new'} onChange={() => setAddressId('new')} />
               <span className="font-bold">{addresses.length ? 'Pakai alamat baru' : 'Isi alamat pengantaran'}</span>
             </label>
 
@@ -228,7 +228,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
                   </div>
                 </div>
                 <label className="flex min-h-[44px] items-center gap-3 text-[15px] font-semibold">
-                  <input type="checkbox" className="h-5 w-5 accent-[#2F7D3A]" checked={save} onChange={(e) => setSave(e.target.checked)} /> Simpan alamat untuk belanja berikutnya
+                  <input type="checkbox" className="h-5 w-5 accent-brand-600" checked={save} onChange={(e) => setSave(e.target.checked)} /> Simpan alamat untuk belanja berikutnya
                 </label>
               </div>
             )}
@@ -241,7 +241,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
           <div className="space-y-3">
             {zones.map((z) => (
               <label key={z.id} className={cn('flex min-h-[64px] cursor-pointer items-center gap-3 rounded-xl border p-3', zoneId === z.id ? 'border-brand-600 bg-brand-50' : 'border-line bg-white')}>
-                <input type="radio" name="zone" className="h-5 w-5 accent-[#2F7D3A]" checked={zoneId === z.id} onChange={() => setZoneId(z.id)} />
+                <input type="radio" name="zone" className="h-5 w-5 accent-brand-600" checked={zoneId === z.id} onChange={() => setZoneId(z.id)} />
                 <span className="min-w-0 flex-1">
                   <span className="block font-bold">{z.name}</span>
                   {z.min_order_idr > 0 && <span className="block text-[13px] text-ink-muted">Minimal belanja {rupiah(z.min_order_idr)}</span>}
@@ -259,7 +259,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
           <div className="space-y-3">
             {METHODS.map(({ id, title, text, icon: Icon }) => (
               <label key={id} className={cn('flex min-h-[72px] cursor-pointer items-center gap-3 rounded-xl border p-3', method === id ? 'border-brand-600 bg-brand-50' : 'border-line bg-white')}>
-                <input type="radio" name="pay" className="h-5 w-5 accent-[#2F7D3A]" checked={method === id} onChange={() => { setMethod(id); setErrors((x) => ({ ...x, payment: undefined })) }} />
+                <input type="radio" name="pay" className="h-5 w-5 accent-brand-600" checked={method === id} onChange={() => { setMethod(id); setErrors((x) => ({ ...x, payment: undefined })) }} />
                 <span className={cn('grid h-11 w-11 shrink-0 place-items-center rounded-xl', method === id ? 'bg-brand-600 text-white' : 'bg-cream-200 text-ink-soft')}><Icon size={22} /></span>
                 <span className="min-w-0">
                   <span className="block font-bold">{title}</span>
@@ -281,8 +281,8 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
       </div>
 
       {/* ringkasan */}
-      <aside className="card p-5 lg:sticky lg:top-24">
-        <h2 className="text-lg font-bold">Ringkasan pesanan</h2>
+      <aside className="card p-5 lg:sticky lg:top-28">
+        <h2 className="text-[15px] font-extrabold">Ringkasan pesanan</h2>
         <ul className="mt-3 max-h-56 divide-y divide-line overflow-y-auto text-[14px]">
           {cart.lines.map((l) => (
             <li key={l.productId} className="flex justify-between gap-3 py-2">
@@ -297,7 +297,7 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
         </dl>
         <div className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
           <span className="font-bold">Total bayar</span>
-          <span className="text-2xl font-extrabold text-brand-700">{rupiah(total)}</span>
+          <span className="text-xl font-extrabold text-brand-700">{rupiah(total)}</span>
         </div>
         <button onClick={submit} disabled={busy} className="btn-primary btn-lg mt-4 hidden w-full lg:inline-flex">
           {busy ? <><Spinner /> Membuat pesanan...</> : 'Buat pesanan'}
@@ -305,11 +305,11 @@ export function CheckoutForm({ profile, addresses, zones, storeName }: Props) {
         <p className="mt-2 hidden text-center text-xs text-ink-muted lg:block">Dengan memesan, kamu setuju dengan <Link href="/terms" className="underline">Syarat layanan</Link> {storeName}.</p>
       </aside>
 
-      <div className="fixed inset-x-0 bottom-[calc(64px+var(--safe-b))] z-40 border-t border-line bg-white p-3 shadow-nav lg:hidden">
+      <div className="bottom-action">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <div className="min-w-0 flex-1 leading-tight">
             <p className="text-[13px] text-ink-muted">Total bayar</p>
-            <p className="text-xl font-extrabold">{rupiah(total)}</p>
+            <p className="text-lg font-extrabold">{rupiah(total)}</p>
           </div>
           <button onClick={submit} disabled={busy} className="btn-primary btn-lg px-6">
             {busy ? <><Spinner /> Memproses</> : 'Buat pesanan'}
@@ -342,11 +342,11 @@ function Step({
   return (
     <section ref={innerRef} className="card scroll-mt-24 p-4 sm:p-5" aria-labelledby={`s${n}`}>
       <div className="flex items-center gap-3">
-        <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-full text-[15px] font-extrabold', done && !open ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-800')}>
+        <span className={cn('grid h-8 w-8 shrink-0 place-items-center rounded-full text-[14px] font-extrabold', done && !open ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-800')}>
           {done && !open ? <Check size={18} strokeWidth={3} /> : n}
         </span>
         <div className="min-w-0 flex-1">
-          <h2 id={`s${n}`} className="text-[17px] font-bold">{title}</h2>
+          <h2 id={`s${n}`} className="text-[15px] font-extrabold">{title}</h2>
           {!open && summary && <p className="line-clamp-1 text-[14px] text-ink-muted">{summary}</p>}
         </div>
         {!open && (

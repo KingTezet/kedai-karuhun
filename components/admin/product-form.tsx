@@ -73,7 +73,7 @@ export function ProductForm({ categories, product }: { categories: Category[]; p
 
   return (
     <form className="space-y-5 pb-24" onSubmit={(e) => { e.preventDefault(); save() }} noValidate>
-      {err && <div className="rounded-2xl border border-red-300 bg-red-50 p-4 font-semibold text-red-800" role="alert">{err}</div>}
+      {err && <div className="rounded-xl border border-red-300 bg-red-50 p-4 font-semibold text-red-800" role="alert">{err}</div>}
 
       <div className="grid gap-5 lg:grid-cols-[360px_1fr]">
         <Panel title="Foto produk"><ImageUpload value={s.image_url} onChange={(u) => set('image_url', u)} label="Foto utama" /></Panel>

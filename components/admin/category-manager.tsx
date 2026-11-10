@@ -50,7 +50,7 @@ export function CategoryManager({ categories, counts }: { categories: Category[]
         <button className="btn-primary" onClick={openNew}><Plus size={18} /> Tambah kategori</button>
       </div>
 
-      <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-sm text-brand-900">
+      <div className="rounded-xl border border-brand-200 bg-brand-50 p-4 text-sm text-brand-900">
         <b>Foto atau ikon custom:</b> upload foto kategori untuk menampilkannya sebagai foto. Kalau foto dihapus, ikon custom yang dipilih akan tampil.
       </div>
 

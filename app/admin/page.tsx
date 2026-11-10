@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { AlertTriangle, ClipboardList, PackageCheck, Wallet, ShoppingBag, ChevronRight } from 'lucide-react'
+import { AlertTriangle, Boxes, ClipboardList, PackageCheck, PackagePlus, Wallet, ShoppingBag, ChevronRight } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/auth'
 import { STAFF, can } from '@/lib/permissions'
@@ -7,7 +7,7 @@ import { jakartaEndExclusive, jakartaStart, jakartaToday, monthStart } from '@/l
 import { formatDateTime, num, rupiah, timeAgo } from '@/lib/utils'
 import { ORDER_LABEL, ORDER_TONE, PAYMENT_LABEL, PAYMENT_TONE } from '@/lib/status'
 import { Badge } from '@/components/ui'
-import { Empty, Panel, StatCard } from '@/components/admin/ui'
+import { Empty, Panel, PanelLink, StatCard } from '@/components/admin/ui'
 import type { OrderStatus } from '@/types'
 import { AdminPushReminder } from '@/components/admin/push-reminder'
 
@@ -39,8 +39,20 @@ export default async function AdminDashboard() {
   const low = (products.data ?? []).filter((p) => Number(p.stock_quantity) <= Number(p.low_stock_threshold))
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       <AdminPushReminder />
+      <section className="flex flex-col gap-3 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 p-5 text-white shadow-card sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[13px] text-white/80">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' })}</p>
+          <h2 className="mt-0.5 text-xl font-extrabold text-white sm:text-2xl">Halo, {(profile.full_name || 'Admin').split(/\s+/)[0]} 👋</h2>
+          <p className="mt-0.5 text-[13px] text-white/85">{(newOrders.count ?? 0) > 0 ? `Ada ${newOrders.count} pesanan baru menunggu konfirmasi.` : 'Semua pesanan sudah ditangani. Mantap!'}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {can.processOrders(profile.role) && <Link href="/admin/orders?status=new" className="btn-sm btn bg-white text-brand-700 hover:bg-white/90"><ClipboardList size={16} /> Proses pesanan</Link>}
+          {can.manageProducts(profile.role) && <Link href="/admin/products/new" className="btn-sm btn bg-white/15 text-white hover:bg-white/25"><PackagePlus size={16} /> Tambah produk</Link>}
+          {can.manageStock(profile.role) && <Link href="/admin/inventory" className="btn-sm btn bg-white/15 text-white hover:bg-white/25"><Boxes size={16} /> Stok</Link>}
+        </div>
+      </section>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatCard label="Pesanan baru" value={newOrders.count ?? 0} hint={(newOrders.count ?? 0) > 0 ? 'Perlu dikonfirmasi' : 'Semua sudah ditangani'} tone={(newOrders.count ?? 0) > 0 ? 'warn' : 'neutral'} href="/admin/orders?status=new" icon={ClipboardList} />
         <StatCard label="Pesanan hari ini" value={valid.length} hint={`Nilai ${rupiah(valid.reduce((s, o) => s + Number(o.total_idr), 0))}`} href="/admin/orders" icon={ShoppingBag} />
@@ -52,19 +64,19 @@ export default async function AdminDashboard() {
         <StatCard label="Stok menipis" value={low.length} hint={low.length ? 'Segera restok' : 'Stok aman'} tone={low.length ? 'warn' : 'neutral'} href="/admin/inventory?filter=low" icon={AlertTriangle} />
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[3fr_2fr]">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-[3fr_2fr]">
         <div className="space-y-5">
-          <Panel title="Perlu ditangani" action={<Link href="/admin/orders?status=new" className="text-sm font-bold text-brand-700">Lihat semua</Link>}>
+          <Panel title="Perlu ditangani" action={<PanelLink href="/admin/orders?status=new">Lihat semua</PanelLink>}>
             {(newOrders.data ?? []).length === 0 ? (
               <Empty text="Tidak ada pesanan baru. Kerja bagus! 🎉" />
             ) : (
               <ul className="divide-y divide-line">
                 {(newOrders.data ?? []).map((o) => (
                   <li key={o.id}>
-                    <Link href={`/admin/orders/${o.id}`} className="flex min-h-[64px] items-center gap-3 py-2">
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-100 text-accent-700"><PackageCheck size={22} /></span>
+                    <Link href={`/admin/orders/${o.id}`} className="-mx-2 flex min-h-[64px] items-center gap-3 rounded-lg px-2 py-2 hover:bg-cream-50">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent-50 text-accent-600"><PackageCheck size={20} /></span>
                       <span className="min-w-0 flex-1">
-                        <span className="block font-bold">{o.order_number}</span>
+                        <span className="block text-[14px] font-bold">{o.order_number}</span>
                         <span className="block truncate text-[13px] text-ink-muted">{(o.address_snapshot as { recipient_name?: string })?.recipient_name} · {timeAgo(o.created_at)}</span>
                       </span>
                       <span className="text-right">
@@ -91,13 +103,13 @@ export default async function AdminDashboard() {
             )}
           </Panel>
 
-          <Panel title="Pesanan terbaru">
+          <Panel title="Pesanan terbaru" action={<PanelLink href="/admin/orders">Semua pesanan</PanelLink>}>
             <ul className="divide-y divide-line">
               {(recent.data ?? []).map((o) => (
                 <li key={o.id}>
-                  <Link href={`/admin/orders/${o.id}`} className="flex min-h-[56px] items-center justify-between gap-3 py-2">
+                  <Link href={`/admin/orders/${o.id}`} className="-mx-2 flex min-h-[56px] items-center justify-between gap-3 rounded-lg px-2 py-2 hover:bg-cream-50">
                     <span className="min-w-0">
-                      <span className="block font-semibold">{o.order_number}</span>
+                      <span className="block text-[14px] font-semibold">{o.order_number}</span>
                       <span className="block text-[13px] text-ink-muted">{formatDateTime(o.created_at)}</span>
                     </span>
                     <span className="flex flex-col items-end gap-1">
@@ -113,14 +125,14 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="space-y-5">
-          <Panel title="Stok menipis" action={<Link href="/admin/inventory?filter=low" className="text-sm font-bold text-brand-700">Kelola</Link>}>
+          <Panel title="Stok menipis" action={<PanelLink href="/admin/inventory?filter=low">Kelola</PanelLink>}>
             {low.length === 0 ? (
               <Empty text="Semua stok aman." />
             ) : (
               <ul className="divide-y divide-line">
                 {low.slice(0, 8).map((p) => (
                   <li key={p.id} className="flex items-center justify-between gap-3 py-2.5">
-                    <span className="min-w-0 truncate font-semibold">{p.name}</span>
+                    <span className="min-w-0 truncate text-[14px] font-semibold">{p.name}</span>
                     <Badge tone={Number(p.stock_quantity) <= 0 ? 'bad' : 'warn'}>{Number(p.stock_quantity) <= 0 ? 'Habis' : `Sisa ${num(p.stock_quantity)} ${p.unit}`}</Badge>
                   </li>
                 ))}

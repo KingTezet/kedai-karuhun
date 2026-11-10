@@ -144,7 +144,7 @@ export function AddressManager({ addresses, zones, defaults }: { addresses: Addr
               </Field>
             )}
             <label className="flex min-h-[44px] items-center gap-3 font-semibold">
-              <input type="checkbox" className="h-5 w-5 accent-[#2F7D3A]" checked={draft.is_default} onChange={(e) => setDraft({ ...draft, is_default: e.target.checked })} /> Jadikan alamat utama
+              <input type="checkbox" className="h-5 w-5 accent-brand-600" checked={draft.is_default} onChange={(e) => setDraft({ ...draft, is_default: e.target.checked })} /> Jadikan alamat utama
             </label>
             {err && <p className="field-error" role="alert">{err}</p>}
           </div>

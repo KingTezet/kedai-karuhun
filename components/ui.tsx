@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ImageOff } from 'lucide-react'
+import { ChevronLeft, ImageOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { TONE_CLASS, type Tone } from '@/lib/status'
 
@@ -22,12 +22,12 @@ export function EmptyState({
   className?: string
 }) {
   return (
-    <div className={cn('flex flex-col items-center rounded-2xl border border-dashed border-line bg-white px-6 py-12 text-center', className)}>
-      <div className="grid h-16 w-16 place-items-center rounded-full bg-brand-50 text-brand-600">
-        <Icon size={30} />
+    <div className={cn('flex flex-col items-center rounded-xl border border-line/70 bg-white px-6 py-14 text-center shadow-card', className)}>
+      <div className="grid h-20 w-20 place-items-center rounded-full bg-brand-50 text-brand-600">
+        <Icon size={36} />
       </div>
-      <h2 className="mt-4 text-lg font-bold">{title}</h2>
-      {text && <p className="mt-1 max-w-sm text-[15px] text-ink-muted">{text}</p>}
+      <h2 className="mt-4 text-[17px] font-extrabold">{title}</h2>
+      {text && <p className="mt-1 max-w-sm text-[14px] text-ink-muted">{text}</p>}
       {action && (
         <Link href={action.href} className="btn-primary mt-5">
           {action.label}
@@ -49,16 +49,16 @@ export function PageHeader({
   action?: React.ReactNode
 }) {
   return (
-    <div className="mb-5">
+    <div className="mb-4">
       {back && (
-        <Link href={back.href} className="mb-2 inline-flex min-h-[40px] items-center gap-1 text-sm font-semibold text-ink-muted hover:text-ink">
-          <span aria-hidden>←</span> {back.label}
+        <Link href={back.href} className="mb-1 inline-flex min-h-[32px] items-center gap-1 text-[13px] font-semibold text-brand-600 hover:text-brand-700">
+          <ChevronLeft size={16} aria-hidden /> {back.label}
         </Link>
       )}
       <div className="flex items-end justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-2xl font-extrabold sm:text-3xl">{title}</h1>
-          {subtitle && <p className="mt-1 text-[15px] text-ink-muted">{subtitle}</p>}
+          <h1 className="text-xl font-extrabold sm:text-2xl">{title}</h1>
+          {subtitle && <p className="mt-0.5 text-[13px] text-ink-muted sm:text-[14px]">{subtitle}</p>}
         </div>
         {action}
       </div>
@@ -87,12 +87,12 @@ export function ProductImage({
   if (!src) {
     return (
       <div
-        className={cn('relative grid h-full w-full place-items-center bg-gradient-to-br from-brand-50 to-cream-200', className)}
+        className={cn('relative grid h-full w-full place-items-center bg-gradient-to-br from-cream-50 to-cream-200', className)}
         role="img"
         aria-label={`${name} (foto belum tersedia)`}
       >
-        <div className="flex flex-col items-center gap-1 text-brand-600/70">
-          <span className="grid h-14 w-14 place-items-center rounded-full bg-white/80 text-2xl font-extrabold text-brand-600 shadow-card">
+        <div className="flex flex-col items-center gap-1 text-ink-faint">
+          <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-xl font-extrabold text-brand-600 shadow-card">
             {name.trim().charAt(0).toUpperCase()}
           </span>
           <ImageOff size={14} aria-hidden />

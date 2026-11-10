@@ -49,11 +49,11 @@ export function SearchBox({ initial, showRecent }: { initial: string; showRecent
           enterKeyHint="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          className="input min-h-[52px] pl-12 pr-12 text-[17px]"
+          className="input min-h-[48px] pl-12 pr-12 text-[15px]"
           placeholder="Cari mangga, telur, minyak..."
         />
         {q && (
-          <button type="button" onClick={() => setQ('')} aria-label="Hapus kata pencarian" className="absolute right-1.5 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-xl text-ink-muted hover:bg-cream-200">
+          <button type="button" onClick={() => setQ('')} aria-label="Hapus kata pencarian" className="absolute right-1.5 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-lg text-ink-muted hover:bg-cream-100">
             <X size={18} />
           </button>
         )}

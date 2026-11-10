@@ -41,7 +41,7 @@ export function SettingsForm({ settings, zones }: { settings: S; zones: Delivery
 
   return (
     <div className="space-y-5 pb-24">
-      {err && <div className="rounded-2xl border border-red-300 bg-red-50 p-4 font-semibold text-red-800" role="alert">{err}</div>}
+      {err && <div className="rounded-xl border border-red-300 bg-red-50 p-4 font-semibold text-red-800" role="alert">{err}</div>}
 
       <Panel title="Profil toko">
         <div className="grid gap-5 sm:grid-cols-[220px_1fr]">
@@ -129,11 +129,11 @@ export function SettingsForm({ settings, zones }: { settings: S; zones: Delivery
           </div>
 
           <div
-            className="rounded-2xl border border-line p-4"
+            className="rounded-xl border border-line p-4"
             style={themeCssVariables(s.theme_primary_hex)}
           >
             <p className="mb-3 text-sm font-bold text-ink">Preview tema</p>
-            <div className="rounded-2xl border border-line bg-white p-4 shadow-card">
+            <div className="rounded-xl border border-line bg-white p-4 shadow-card">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold text-ink-muted">Kedai Karuhun</p>

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 export function Pagination({ page, pages, hrefFor }: { page: number; pages: number; hrefFor: (p: number) => string }) {
   if (pages <= 1) return null
-  const cell = 'btn-secondary btn-sm min-w-[44px]'
+  const cell = 'btn-secondary btn-sm min-w-[40px]'
   return (
     <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Halaman">
       {page > 1 ? (
@@ -14,7 +14,7 @@ export function Pagination({ page, pages, hrefFor }: { page: number; pages: numb
       ) : (
         <span className={cn(cell, 'pointer-events-none opacity-40')}><ChevronLeft size={18} /> Sebelumnya</span>
       )}
-      <span className="px-2 text-sm font-semibold text-ink-muted">
+      <span className="rounded-md bg-brand-600 px-3 py-1.5 text-[13px] font-bold text-white">
         {page} / {pages}
       </span>
       {page < pages ? (

@@ -35,8 +35,8 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-[15px] text-ink-muted">{count ?? 0} pengguna</p><CreateUserForm canCreateStaff={me.role === 'admin'} /></div>
-      <form className="grid gap-2 sm:grid-cols-[1fr_auto_auto]" role="search">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-[14px] text-ink-muted"><b className="text-ink">{count ?? 0}</b> pengguna</p><CreateUserForm canCreateStaff={me.role === 'admin'} /></div>
+      <form className="card grid gap-2 p-3 sm:grid-cols-[1fr_auto_auto] sm:p-4" role="search">
         <label className="relative"><span className="sr-only">Cari pengguna</span><Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" /><input name="q" defaultValue={q} className="input pl-10" placeholder="Nama atau nomor HP" /></label>
         <select name="role" defaultValue={role} className="input" aria-label="Peran"><option value="">Semua peran</option>{Object.entries(ROLE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
         <button className="btn-primary">Terapkan</button>

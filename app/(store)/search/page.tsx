@@ -19,7 +19,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const result = searching ? await queryProducts(query) : null
 
   return (
-    <div className="page py-5 sm:py-8">
+    <div className="page py-4 sm:py-6">
       <SearchBox initial={query.q ?? ''} showRecent={!searching} />
 
       {!searching && (
@@ -29,14 +29,14 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             {categories.map((c, i) => {
               const Icon = categoryIcon(c.slug, c.name, c.icon_name)
               return (
-                <Link key={c.id} href={`/kategori/${c.slug}`} className="card flex min-h-[64px] items-center gap-3 p-3 transition active:scale-[.98]">
+                <Link key={c.id} href={`/kategori/${c.slug}`} className="card flex min-h-[60px] items-center gap-3 p-3 transition hover:border-brand-300 active:scale-[.98]">
                   {c.image_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.image_url} alt="" className="h-11 w-11 shrink-0 rounded-xl object-cover" />
+                    <img src={c.image_url} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
                   ) : (
-                    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${categoryTint(i)}`}><Icon size={22} /></span>
+                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${categoryTint(i)}`}><Icon size={22} /></span>
                   )}
-                  <span className="text-sm font-bold leading-tight">{c.name}</span>
+                  <span className="text-[13px] font-semibold leading-tight">{c.name}</span>
                 </Link>
               )
             })}

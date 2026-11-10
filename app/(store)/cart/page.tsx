@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: 'Keranjang', robots: { index: false }
 
 export default function CartPage() {
   return (
-    <div className="page pb-44 pt-5 sm:pt-8 lg:pb-8">
-      <PageHeader title="Keranjang" subtitle="Cek lagi pesananmu sebelum lanjut" />
+    <div className="page pb-28 pt-4 sm:pt-6 lg:pb-8">
+      <PageHeader title="Keranjang" subtitle="Cek lagi barang belanjaanmu sebelum checkout" />
       <CartView />
     </div>
   )

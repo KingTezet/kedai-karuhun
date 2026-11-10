@@ -18,14 +18,17 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const settings = await getSettings()
   return (
     <div className="page flex justify-center py-8 sm:py-14">
-      <div className="card w-full max-w-md p-6 sm:p-8">
-        <h1 className="text-2xl font-extrabold">Masuk ke {settings?.store_name || 'Kedai Karuhun'}</h1>
+      <div className="card w-full max-w-md overflow-hidden p-0">
+        <div className="h-1.5 bg-gradient-to-r from-brand-600 to-accent-500" aria-hidden />
+        <div className="p-6 sm:p-8">
+        <h1 className="text-xl font-extrabold sm:text-2xl">Masuk ke {settings?.store_name || 'Kedai Karuhun'}</h1>
         <p className="mb-6 mt-1 text-[15px] text-ink-muted">Gunakan nomor HP dan password. Tidak perlu email untuk masuk atau membuat akun.</p>
         <LoginForm next={next} initialTab={initialTab} />
         <p className="mt-6 flex items-start gap-2 rounded-xl bg-cream-100 p-3 text-[13px] text-ink-muted">
           <ShieldCheck size={18} className="mt-0.5 shrink-0 text-brand-600" /> Data akun dan pesanan dilindungi oleh sistem autentikasi Kedai Karuhun. <Link href="/privacy" className="font-semibold underline">Privasi</Link>
         </p>
-        <Link href="/" className="mt-4 flex min-h-[44px] items-center justify-center font-semibold text-brand-700">Lanjut lihat-lihat dulu →</Link>
+        <Link href="/" className="mt-4 flex min-h-[44px] items-center justify-center text-[14px] font-bold text-brand-600">Lanjut lihat-lihat dulu →</Link>
+        </div>
       </div>
     </div>
   )

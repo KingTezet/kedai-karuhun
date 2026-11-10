@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
 import Script from 'next/script'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { AppProviders } from '@/components/providers'
 import { NavProgress } from '@/components/nav-progress'
@@ -10,6 +11,8 @@ import { normalizeHex } from '@/lib/theme'
 import { FaviconController } from '@/components/favicon-controller'
 
 const GA = process.env.NEXT_PUBLIC_GA_ID
+
+const sans = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800'], variable: '--font-sans', display: 'swap' })
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings()
@@ -50,7 +53,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const settings = await getSettings()
   const iconSource = settings?.favicon_url || settings?.logo_url || null
   return (
-    <html lang="id">
+    <html lang="id" className={sans.variable}>
       <body>
         <FaviconController source={iconSource} />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[110] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-bold">

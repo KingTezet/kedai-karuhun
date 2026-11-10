@@ -37,11 +37,11 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[15px] text-ink-muted">{count ?? 0} produk</p>
+        <p className="text-[14px] text-ink-muted"><b className="text-ink">{count ?? 0}</b> produk terdaftar</p>
         <Link href="/admin/products/new" className="btn-primary"><Plus size={18} /> Tambah produk</Link>
       </div>
 
-      <form className="grid gap-2 sm:grid-cols-[1fr_auto_auto_auto]" role="search">
+      <form className="card grid gap-2 p-3 sm:grid-cols-[1fr_auto_auto_auto] sm:p-4" role="search">
         <label className="relative"><span className="sr-only">Cari produk</span><Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" /><input name="q" defaultValue={q} className="input pl-10" placeholder="Nama atau SKU" /></label>
         <select name="kategori" defaultValue={sp.kategori ?? ''} className="input" aria-label="Kategori"><option value="">Semua kategori</option>{((cats ?? []) as Pick<Category, 'id' | 'name'>[]).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
         <select name="status" defaultValue={sp.status ?? ''} className="input" aria-label="Status"><option value="">Semua status</option><option value="aktif">Aktif</option><option value="arsip">Diarsipkan</option></select>
@@ -52,18 +52,18 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
         <EmptyState icon={Package} title="Belum ada produk" text="Tambahkan produk pertama untuk mulai berjualan." action={{ label: 'Tambah produk', href: '/admin/products/new' }} />
       ) : (
         <>
-          <ul className="space-y-3">
+          <ul className="space-y-2.5 lg:hidden">
             {products.map((p) => {
               const low = p.stock_quantity <= p.low_stock_threshold
               return (
                 <li key={p.id}>
                   <Link href={`/admin/products/${p.id}`} className={cn('card flex items-center gap-3 p-3 transition active:scale-[.99] hover:border-brand-300', !p.is_active && 'opacity-70')}>
-                    <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-cream-200"><ProductImage src={p.image_url} name={p.name} sizes="64px" /></span>
+                    <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-line/70 bg-cream-100"><ProductImage src={p.image_url} name={p.name} sizes="64px" /></span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate font-bold">{p.name}</span>
-                      <span className="block text-[13px] text-ink-muted">{p.category?.name ?? 'Tanpa kategori'}{p.sku ? ` · ${p.sku}` : ''}</span>
+                      <span className="block truncate text-[14px] font-bold">{p.name}</span>
+                      <span className="block text-[12px] text-ink-muted">{p.category?.name ?? 'Tanpa kategori'}{p.sku ? ` · ${p.sku}` : ''}</span>
                       <span className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                        <span className="font-extrabold text-brand-700">{rupiah(p.price_idr)}<span className="text-xs font-normal text-ink-muted"> /{p.unit}</span></span>
+                        <span className="text-[14px] font-extrabold">{rupiah(p.price_idr)}<span className="text-xs font-normal text-ink-muted"> /{p.unit}</span></span>
                         {!p.is_active && <Badge>Arsip</Badge>}
                         {p.is_featured && <Badge tone="info">Unggulan</Badge>}
                       </span>
@@ -74,6 +74,49 @@ export default async function AdminProducts({ searchParams }: { searchParams: Pr
               )
             })}
           </ul>
+
+          <div className="card hidden overflow-hidden lg:block">
+            <table className="w-full text-left text-[14px]">
+              <thead className="border-b border-line bg-cream-50 text-[11px] uppercase tracking-wider text-ink-muted">
+                <tr>
+                  <th className="px-4 py-3">Produk</th>
+                  <th className="px-4 py-3">Kategori</th>
+                  <th className="px-4 py-3 text-right">Harga</th>
+                  <th className="px-4 py-3">Stok</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3" aria-label="Aksi" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {products.map((p) => {
+                  const low = p.stock_quantity <= p.low_stock_threshold
+                  return (
+                    <tr key={p.id} className={cn('hover:bg-cream-50', !p.is_active && 'opacity-70')}>
+                      <td className="px-4 py-3">
+                        <Link href={`/admin/products/${p.id}`} className="flex items-center gap-3">
+                          <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-line/70 bg-cream-100"><ProductImage src={p.image_url} name={p.name} sizes="48px" /></span>
+                          <span className="min-w-0">
+                            <span className="line-clamp-1 font-bold hover:text-brand-700">{p.name}</span>
+                            <span className="block text-[12px] text-ink-muted">{p.sku ? `SKU ${p.sku}` : 'Tanpa SKU'}</span>
+                          </span>
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3 text-ink-soft">{p.category?.name ?? '—'}</td>
+                      <td className="px-4 py-3 text-right font-extrabold tabular-nums">{rupiah(p.price_idr)}<span className="block text-[11px] font-normal text-ink-muted">/{p.unit}</span></td>
+                      <td className="px-4 py-3"><Badge tone={p.stock_quantity <= 0 ? 'bad' : low ? 'warn' : 'good'}>{p.stock_quantity <= 0 ? 'Habis' : `${num(p.stock_quantity)} ${p.unit}`}</Badge></td>
+                      <td className="px-4 py-3">
+                        <span className="flex flex-wrap gap-1">
+                          {p.is_active ? <Badge tone="good">Aktif</Badge> : <Badge>Arsip</Badge>}
+                          {p.is_featured && <Badge tone="info">Unggulan</Badge>}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right"><Link href={`/admin/products/${p.id}`} className="btn-secondary btn-sm">Ubah</Link></td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
           <Pagination page={page} pages={pages} hrefFor={(p) => href({ page: p > 1 ? String(p) : undefined })} />
         </>
       )}

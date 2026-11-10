@@ -29,7 +29,7 @@ export default async function AdminInventory({ searchParams }: { searchParams: P
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="card flex flex-col gap-3 p-3 sm:flex-row sm:p-4">
         <form role="search" className="relative flex-1">
           <span className="sr-only">Cari produk</span>
           <Search size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" />

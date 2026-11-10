@@ -15,7 +15,7 @@ export function AddButton({ product }: { product: Product }) {
 
   if (product.stock_quantity <= 0) {
     return (
-      <button disabled className="btn-secondary w-full cursor-not-allowed text-ink-faint">
+      <button disabled className="btn-secondary btn-sm w-full cursor-not-allowed text-ink-faint">
         Stok habis
       </button>
     )
@@ -24,6 +24,7 @@ export function AddButton({ product }: { product: Product }) {
     return (
       <Stepper
         full
+        size="sm"
         name={product.name}
         value={qty}
         unit={product.unit}
@@ -35,9 +36,9 @@ export function AddButton({ product }: { product: Product }) {
     )
   }
   return (
-    <button onClick={() => cart.add(product)} className={cn('btn-primary w-full')} aria-label={`Tambah ${product.name} ke keranjang`}>
-      <Plus size={18} />
-      Tambah
+    <button onClick={() => cart.add(product)} className={cn('btn-outline btn-sm w-full')} aria-label={`Tambah ${product.name} ke keranjang`}>
+      <Plus size={16} strokeWidth={2.6} />
+      Keranjang
     </button>
   )
 }

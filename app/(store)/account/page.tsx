@@ -25,33 +25,33 @@ export default async function AccountPage() {
   const initial = (name || profile?.phone || '?').charAt(0).toUpperCase()
 
   return (
-    <div className="page py-5 sm:py-8">
+    <div className="page py-4 sm:py-6">
       <PageHeader title="Akun saya" />
       <div className="grid gap-5 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="space-y-5">
-          <section className="card flex items-center gap-4 p-4 sm:p-5">
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-brand-600 text-2xl font-extrabold text-white">{initial}</span>
+          <section className="flex items-center gap-4 rounded-xl bg-gradient-to-r from-brand-700 to-brand-500 p-5 text-white shadow-card">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-white text-2xl font-extrabold text-brand-700 ring-4 ring-white/30">{initial}</span>
             <div className="min-w-0">
-              <p className="line-clamp-1 text-xl font-extrabold">{name || 'Lengkapi nama kamu'}</p>
-              <p className="line-clamp-1 text-[15px] text-ink-muted">{profile?.phone || user.phone || 'Nomor HP belum diatur'}</p>
+              <p className="line-clamp-1 text-lg font-extrabold text-white">{name || 'Lengkapi nama kamu'}</p>
+              <p className="line-clamp-1 text-[14px] text-white/85">{profile?.phone || user.phone || 'Nomor HP belum diatur'}</p>
             </div>
           </section>
 
           <section className="card p-4 sm:p-5" aria-labelledby="diri">
-            <h2 id="diri" className="mb-4 text-lg font-bold">Data diri</h2>
+            <h2 id="diri" className="mb-4 text-[15px] font-extrabold">Data diri</h2>
             <ProfileForm initial={{ full_name: name, phone: profile?.phone ?? user.phone ?? '' }} />
           </section>
 
           <CustomerNotifications />
 
           <section className="card p-4 sm:p-5" aria-labelledby="password">
-            <h2 id="password" className="mb-1 text-lg font-bold">Keamanan akun</h2>
+            <h2 id="password" className="mb-1 text-[15px] font-extrabold">Keamanan akun</h2>
             <p className="mb-4 text-[14px] text-ink-muted">Login menggunakan nomor HP dan password. Simpan nomor HP yang aktif agar akun mudah diakses.</p>
             <PasswordForm />
           </section>
 
           <section className="card p-4 sm:p-5" aria-labelledby="alamat">
-            <h2 id="alamat" className="mb-4 text-lg font-bold">Alamat tersimpan</h2>
+            <h2 id="alamat" className="mb-4 text-[15px] font-extrabold">Alamat tersimpan</h2>
             <AddressManager addresses={(addresses ?? []) as Address[]} zones={zones} defaults={{ name, phone: profile?.phone ?? '' }} />
           </section>
         </div>
@@ -72,7 +72,7 @@ export default async function AccountPage() {
               { href: '/privacy', label: 'Kebijakan privasi', icon: ShieldCheck },
               { href: '/terms', label: 'Syarat layanan', icon: FileText },
             ].map(({ href, label, icon: Icon }) => (
-              <Link key={href} href={href} className="flex min-h-[56px] items-center gap-3 px-4 hover:bg-cream-100">
+              <Link key={href} href={href} className="flex min-h-[52px] items-center gap-3 px-4 text-[14px] hover:bg-cream-50">
                 <Icon size={20} className="text-brand-600" />
                 <span className="flex-1 font-semibold">{label}</span>
                 <ChevronRight size={18} className="text-ink-faint" />

@@ -32,15 +32,15 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
   for (const it of items ?? []) names.set(it.order_id, [...(names.get(it.order_id) ?? []), it.product_name_snapshot])
 
   return (
-    <div className="page py-5 sm:py-8">
+    <div className="page max-w-4xl py-4 sm:py-6">
       {activeCount > 0 && !done && <AutoRefresh seconds={30} />}
       <PageHeader title="Pesanan saya" subtitle="Pantau status pesananmu di sini" />
 
-      <div className="mb-4 grid grid-cols-2 gap-1 rounded-2xl bg-cream-200 p-1" role="tablist">
-        <Link href="/orders" role="tab" aria-selected={!done} className={cn('btn h-11 text-[15px]', !done ? 'bg-white shadow-card' : 'text-ink-muted')}>
-          Berjalan{activeCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-accent-500 px-1 text-[11px] font-bold text-white">{activeCount}</span>}
+      <div className="mb-4 grid grid-cols-2 rounded-xl border border-line/70 bg-white shadow-card" role="tablist">
+        <Link href="/orders" role="tab" aria-selected={!done} className={cn('flex h-12 items-center justify-center gap-2 border-b-2 text-[14px] font-bold', !done ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-muted')}>
+          Berjalan{activeCount > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-sale-500 px-1 text-[11px] font-bold text-white">{activeCount}</span>}
         </Link>
-        <Link href="/orders?tab=selesai" role="tab" aria-selected={done} className={cn('btn h-11 text-[15px]', done ? 'bg-white shadow-card' : 'text-ink-muted')}>
+        <Link href="/orders?tab=selesai" role="tab" aria-selected={done} className={cn('flex h-12 items-center justify-center gap-2 border-b-2 text-[14px] font-bold', done ? 'border-brand-600 text-brand-700' : 'border-transparent text-ink-muted')}>
           Riwayat
         </Link>
       </div>
@@ -58,10 +58,10 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
             const n = names.get(o.id) ?? []
             return (
               <li key={o.id}>
-                <Link href={`/orders/${o.id}`} className="card block p-4 transition active:scale-[.99]">
+                <Link href={`/orders/${o.id}`} className="card block p-4 transition hover:border-brand-300 hover:shadow-hover active:scale-[.99]">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-extrabold">{o.order_number}</p>
+                      <p className="text-[14px] font-extrabold">{o.order_number}</p>
                       <p className="text-[13px] text-ink-muted">{formatDateTime(o.created_at)}</p>
                     </div>
                     <Badge tone={ORDER_TONE[o.status]}>{ORDER_LABEL[o.status]}</Badge>
@@ -73,7 +73,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   )}
                   <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-lg font-extrabold">{rupiah(o.total_idr)}</span>
+                      <span className="text-[13px] text-ink-muted">Total belanja</span> <span className="text-[16px] font-extrabold">{rupiah(o.total_idr)}</span>
                       {o.status !== 'cancelled' && <Badge tone={PAYMENT_TONE[o.payment_status]}>{PAYMENT_LABEL[o.payment_status]}</Badge>}
                     </div>
                     <ChevronRight className="shrink-0 text-ink-faint" />

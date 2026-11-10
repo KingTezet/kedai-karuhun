@@ -20,16 +20,16 @@ export function FloatingCartBar() {
       <Link
         key={bump}
         href="/cart"
-        className="pointer-events-auto flex animate-pop items-center gap-3 rounded-2xl bg-brand-700 px-4 py-3 text-white shadow-pop active:scale-[.99]"
+        className="pointer-events-auto flex animate-pop items-center gap-3 rounded-xl bg-brand-600 px-3 py-2.5 text-white shadow-pop hover:bg-brand-700 active:scale-[.99]"
       >
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/15">
+        <span className="grid h-9 w-9 place-items-center rounded-lg bg-white/15">
           <ShoppingBasket size={22} />
         </span>
         <span className="min-w-0 flex-1 leading-tight">
-          <span className="block text-[13px] text-white/80">{count} jenis barang</span>
-          <span className="block text-[17px] font-extrabold">{rupiah(subtotal)}</span>
+          <span className="block text-[12px] text-white/80">{count} jenis barang</span>
+          <span className="block text-[15px] font-extrabold">{rupiah(subtotal)}</span>
         </span>
-        <span className="flex items-center text-[15px] font-bold">
+        <span className="flex items-center text-[14px] font-bold">
           Keranjang <ChevronRight size={20} />
         </span>
       </Link>
