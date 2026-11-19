@@ -25,6 +25,11 @@ export function Sheet({
 }) {
   const [mounted, setMounted] = useState(false)
   const panel = useRef<HTMLDivElement>(null)
+  // Callers pass inline `onClose={() => ...}`, a new function every render.
+  // Keep it in a ref so typing (which re-renders the parent) does not re-run
+  // the open/close effect, which used to steal focus and close the keyboard.
+  const onCloseRef = useRef(onClose)
+  useEffect(() => { onCloseRef.current = onClose })
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {
@@ -32,7 +37,7 @@ export function Sheet({
     const prev = document.activeElement as HTMLElement | null
     const overflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onCloseRef.current()
     document.addEventListener('keydown', onKey)
     panel.current?.focus()
     return () => {
@@ -40,12 +45,12 @@ export function Sheet({
       document.removeEventListener('keydown', onKey)
       prev?.focus?.()
     }
-  }, [open, onClose])
+  }, [open])
 
   if (!mounted || !open) return null
   return createPortal(
     <div className="fixed inset-0 z-[90] flex items-end justify-center md:items-center" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0 animate-fade-in bg-ink/50" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 animate-fade-in bg-ink/50" onClick={() => onCloseRef.current()} aria-hidden />
       <div
         ref={panel}
         tabIndex={-1}
@@ -59,7 +64,7 @@ export function Sheet({
             <h2 className="text-lg font-bold">{title}</h2>
             {description && <p className="mt-0.5 text-sm text-ink-muted">{description}</p>}
           </div>
-          <button onClick={onClose} aria-label="Tutup" className="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-xl text-ink-muted hover:bg-cream-200">
+          <button onClick={() => onCloseRef.current()} aria-label="Tutup" className="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-xl text-ink-muted hover:bg-cream-200">
             <X size={22} />
           </button>
         </div>
