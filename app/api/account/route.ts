@@ -30,6 +30,8 @@ export async function PUT(req: Request) {
     .neq('user_id', g.profile.id)
     .maybeSingle()
   if (conflict) return fail('Nomor HP tersebut sudah dipakai akun lain.')
+  const { data: taken } = await g.admin.rpc('phone_is_registered', { p_phone: phone, p_exclude: g.profile.id })
+  if (taken) return fail('Nomor HP tersebut sudah dipakai akun lain.')
 
   const { data: currentAuth } = await g.admin.auth.admin.getUserById(g.profile.id)
   if (!currentAuth.user) return fail('Akun tidak ditemukan.', 404)

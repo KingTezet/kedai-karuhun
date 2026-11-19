@@ -28,8 +28,13 @@ export async function POST(req: Request) {
     return fail('Nomor HP belum benar.')
   }
 
-  const { data: conflict } = await g.admin.from('phone_auth_accounts').select('user_id').eq('phone_e164', phone).maybeSingle()
-  if (conflict) return fail('Nomor HP ini sudah terdaftar.')
+  const { data: taken, error: takenError } = await g.admin.rpc('phone_is_registered', { p_phone: phone })
+  if (takenError) {
+    const { data: conflict } = await g.admin.from('phone_auth_accounts').select('user_id').eq('phone_e164', phone).maybeSingle()
+    if (conflict) return fail('Nomor HP ini sudah terdaftar.')
+  } else if (taken) {
+    return fail('Nomor HP ini sudah terdaftar.')
+  }
 
   const { data: created, error: authError } = await g.admin.auth.admin.createUser({
     email: internalEmail,
@@ -39,7 +44,7 @@ export async function POST(req: Request) {
   })
   if (authError || !created.user) {
     const msg = authError?.message || ''
-    if (/already|registered|exists/i.test(msg)) return fail('Nomor HP ini sudah terdaftar.')
+    if (/already|registered|exists|phone_already_registered|database error/i.test(msg)) return fail('Nomor HP ini sudah terdaftar.')
     return fail('Akun gagal dibuat. Periksa data lalu coba lagi.', 500)
   }
 

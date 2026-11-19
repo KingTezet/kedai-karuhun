@@ -11,7 +11,7 @@ import { phoneAuthEmail, authPhone } from '@/lib/phone-auth'
 function friendlyAuthError(message: string) {
   const m = message.toLowerCase()
   if (m.includes('invalid login credentials')) return 'Nomor HP atau password salah.'
-  if (m.includes('user already registered') || m.includes('already registered')) return 'Nomor HP ini sudah terdaftar. Coba masuk.'
+  if (m.includes('user already registered') || m.includes('already registered') || m.includes('phone_already_registered') || m.includes('database error saving new user')) return 'Nomor HP ini sudah terdaftar. Coba masuk.'
   if (m.includes('password should be at least')) return 'Password terlalu pendek. Gunakan minimal 8 karakter.'
   if (m.includes('rate limit') || m.includes('too many requests') || m.includes('too many')) return 'Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.'
   if (m.includes('email provider') || m.includes('email sign-up')) return 'Pendaftaran sedang dinonaktifkan. Coba lagi beberapa saat.'
@@ -64,6 +64,12 @@ export function LoginForm({ next, initialTab = 'login' }: { next: string; initia
       router.replace(next)
       router.refresh()
       return
+    }
+
+    const { data: taken, error: checkErr } = await supabase.rpc('phone_is_registered', { p_phone: normalized })
+    if (!checkErr && taken) {
+      setBusy(false)
+      return setError('Nomor HP ini sudah terdaftar. Coba masuk.')
     }
 
     const { data, error: err } = await supabase.auth.signUp({
