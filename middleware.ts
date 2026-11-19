@@ -56,7 +56,8 @@ export async function middleware(request: NextRequest) {
       },
     },
   )
-  await supabase.auth.getUser()
+  // Refreshes an expired session; verifies locally instead of calling the Auth server.
+  await supabase.auth.getClaims()
   return response
 }
 
