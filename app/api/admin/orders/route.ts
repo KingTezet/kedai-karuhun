@@ -1,4 +1,4 @@
-import { fail, guard, ok, parseBody, dbError } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { STAFF } from '@/lib/permissions'
 import { orderPatchSchema } from '@/lib/validation'
 import { notifyUsers } from '@/lib/push'
@@ -22,7 +22,7 @@ export async function PATCH(req: Request) {
       p_note: data.note ?? null,
       p_actor_id: g.profile.id,
     })
-    if (e) return fail(dbError(e.message, /function .*admin_set_payment_status/i.test(e.message) ? 'Sistem pembayaran belum diperbarui. Jalankan migration terbaru di Supabase.' : 'Gagal memperbarui pembayaran.'), 500)
+    if (e) return dbFail(e, 'Gagal memperbarui pembayaran.', 500, 'admin-orders')
   }
 
   if (data.status) {
@@ -32,7 +32,7 @@ export async function PATCH(req: Request) {
       p_note: data.note ?? null,
       p_actor_id: g.profile.id,
     })
-    if (e) return fail(dbError(e.message, /function .*admin_set_order_status/i.test(e.message) ? 'Sistem pesanan belum diperbarui. Jalankan migration terbaru di Supabase.' : 'Gagal memperbarui status pesanan.'), 500)
+    if (e) return dbFail(e, 'Gagal memperbarui status pesanan.', 500, 'admin-orders')
   }
 
   const { data: order } = await createAdminClient()

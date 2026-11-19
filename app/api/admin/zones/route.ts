@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { dbError, fail, guard, ok, parseBody } from '@/lib/api'
+import { guard, ok, parseBody, dbFail } from '@/lib/api'
 import { ADMIN } from '@/lib/permissions'
 import { zoneSchema } from '@/lib/validation'
 
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   const { data, error } = await parseBody(req, zoneSchema)
   if (error) return error
   const { error: e } = await g.admin.from('delivery_zones').insert(data)
-  if (e) return fail(dbError(e.message, 'Area gagal disimpan.'))
+  if (e) return dbFail(e, 'Area gagal disimpan.', 400, 'zones')
   return ok()
 }
 
@@ -20,7 +20,7 @@ export async function PATCH(req: Request) {
   if (error) return error
   const { id, ...rest } = data
   const { error: e } = await g.admin.from('delivery_zones').update({ ...rest, updated_at: new Date().toISOString() }).eq('id', id)
-  if (e) return fail(dbError(e.message, 'Area gagal diperbarui.'))
+  if (e) return dbFail(e, 'Area gagal diperbarui.', 400, 'zones')
   return ok()
 }
 
@@ -30,6 +30,6 @@ export async function DELETE(req: Request) {
   const { data, error } = await parseBody(req, z.object({ id: z.string().uuid() }))
   if (error) return error
   const { error: e } = await g.admin.from('delivery_zones').delete().eq('id', data.id)
-  if (e) return fail('Area gagal dihapus.')
+  if (e) return dbFail(e, 'Area gagal dihapus.', 400, 'zones')
   return ok()
 }

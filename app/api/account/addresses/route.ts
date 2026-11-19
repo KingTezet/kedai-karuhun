@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { addressInput } from '@/lib/validation'
 
 const withId = addressInput.extend({ id: z.string().uuid() })
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   const makeDefault = data.is_default || (count ?? 0) === 0
   if (makeDefault) await g.admin.from('customer_addresses').update({ is_default: false }).eq('user_id', g.profile.id)
   const { error: e } = await g.admin.from('customer_addresses').insert({ ...data, user_id: g.profile.id, is_default: makeDefault })
-  if (e) return fail('Alamat gagal disimpan.', 500)
+  if (e) return dbFail(e, 'Alamat gagal disimpan.', 500, 'addresses')
   return ok()
 }
 

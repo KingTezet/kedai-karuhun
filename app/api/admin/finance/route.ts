@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { MANAGER } from '@/lib/permissions'
 import { expenseSchema } from '@/lib/validation'
 import { jakartaToday } from '@/lib/dates'
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     occurred_at: data.occurred_at ?? jakartaToday(),
     created_by: g.profile.id,
   })
-  if (e) return fail('Transaksi gagal disimpan.', 500)
+  if (e) return dbFail(e, 'Transaksi gagal disimpan.', 500, 'finance')
   return ok()
 }
 
@@ -30,6 +30,7 @@ export async function DELETE(req: Request) {
   const { data: row } = await g.admin.from('financial_transactions').select('order_id').eq('id', data.id).maybeSingle()
   if (!row) return fail('Transaksi tidak ditemukan.', 404)
   if (row.order_id) return fail('Transaksi dari pesanan tidak bisa dihapus.')
-  await g.admin.from('financial_transactions').delete().eq('id', data.id)
+  const { error: de } = await g.admin.from('financial_transactions').delete().eq('id', data.id)
+  if (de) return dbFail(de, 'Transaksi gagal dihapus.', 500, 'finance')
   return ok()
 }

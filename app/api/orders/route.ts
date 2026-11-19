@@ -1,4 +1,4 @@
-import { fail, guard, ok, parseBody, dbError } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { createClient } from '@/lib/supabase/server'
 import { orderSchema } from '@/lib/validation'
 
@@ -31,7 +31,8 @@ export async function POST(req: Request) {
     p_address: address,
     p_note: body.note ?? null,
   })
-  if (rpcErr || !orderId) return fail(dbError(rpcErr?.message ?? '', 'Pesanan gagal dibuat. Coba lagi.'), 400)
+  if (rpcErr) return dbFail(rpcErr, 'Pesanan gagal dibuat.', 400, 'orders')
+  if (!orderId) return fail('Pesanan gagal dibuat. Coba lagi.', 500)
 
   // 3. efek samping (gagal tidak membatalkan order)
   try {

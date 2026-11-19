@@ -1,4 +1,4 @@
-import { fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { MANAGER, can } from '@/lib/permissions'
 import { userPatchSchema } from '@/lib/validation'
 import { authPhone, phoneAuthEmail } from '@/lib/phone-auth'
@@ -92,6 +92,6 @@ export async function PATCH(req: Request) {
     if ((count ?? 0) <= 1) return fail('Harus ada minimal satu admin aktif.')
   }
   const { error: e } = await g.admin.from('profiles').update(update).eq('id', data.id)
-  if (e) return fail('Gagal memperbarui pengguna.', 500)
+  if (e) return dbFail(e, 'Gagal memperbarui pengguna.', 500, 'users')
   return ok()
 }

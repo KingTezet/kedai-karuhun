@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { revalidateTag } from 'next/cache'
-import { dbError, fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { createClient } from '@/lib/supabase/server'
 import { MANAGER } from '@/lib/permissions'
 import { productCreateSchema, productSchema } from '@/lib/validation'
@@ -12,7 +12,8 @@ export async function POST(req: Request) {
   if (error) return error
   const { initial_stock, ...row } = data
   const { data: created, error: e } = await g.admin.from('products').insert({ ...row, stock_quantity: 0 }).select('id').single()
-  if (e || !created) return fail(dbError(e?.message ?? '', 'Produk gagal disimpan.'))
+  if (e) return dbFail(e, 'Produk gagal disimpan.', 400, 'products')
+  if (!created) return fail('Produk gagal disimpan.', 500)
   if (initial_stock > 0) {
     const args = { p_product_id: created.id, p_mode: 'in', p_amount: initial_stock, p_note: 'Stok awal' }
     let { error: se } = await g.admin.rpc('admin_adjust_stock', { ...args, p_actor_id: g.profile.id })
@@ -39,7 +40,7 @@ export async function PATCH(req: Request) {
   if (error) return error
   const { id, ...rest } = data
   const { error: e } = await g.admin.from('products').update({ ...rest, updated_at: new Date().toISOString() }).eq('id', id)
-  if (e) return fail(dbError(e.message, 'Produk gagal diperbarui.'))
+  if (e) return dbFail(e, 'Produk gagal diperbarui.', 400, 'products')
   revalidateTag('catalog')
   return ok()
 }
@@ -52,7 +53,7 @@ export async function DELETE(req: Request) {
   const { count } = await g.admin.from('order_items').select('id', { count: 'exact', head: true }).eq('product_id', data.id)
   if ((count ?? 0) > 0) return fail('Produk ini sudah pernah dipesan, jadi tidak bisa dihapus. Arsipkan saja.')
   const { error: e } = await g.admin.from('products').delete().eq('id', data.id)
-  if (e) return fail('Produk gagal dihapus.')
+  if (e) return dbFail(e, 'Produk gagal dihapus.', 400, 'products')
   revalidateTag('catalog')
   return ok()
 }

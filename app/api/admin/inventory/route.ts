@@ -1,5 +1,5 @@
 import { revalidateTag } from 'next/cache'
-import { dbError, fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { createClient } from '@/lib/supabase/server'
 import { STAFF } from '@/lib/permissions'
 import { stockSchema } from '@/lib/validation'
@@ -33,11 +33,7 @@ export async function POST(req: Request) {
     }))
   }
 
-  if (e) {
-    console.error('[inventory] adjust failed', { code: e.code, message: e.message, details: e.details, hint: e.hint })
-    const friendly = dbError(e.message, '')
-    return fail(friendly || `Stok gagal diperbarui (${e.code || 'db'}: ${e.message.slice(0, 120)})`, 500)
-  }
+  if (e) return dbFail(e, 'Stok gagal diperbarui', 500, 'inventory')
   revalidateTag('catalog')
   return ok({ stock })
 }

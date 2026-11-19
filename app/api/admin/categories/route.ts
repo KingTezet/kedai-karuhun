@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { revalidateTag } from 'next/cache'
-import { dbError, fail, guard, ok, parseBody } from '@/lib/api'
+import { fail, guard, ok, parseBody, dbFail } from '@/lib/api'
 import { MANAGER } from '@/lib/permissions'
 import { categorySchema } from '@/lib/validation'
 
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const { data, error } = await parseBody(req, categorySchema)
   if (error) return error
   const { error: e } = await g.admin.from('categories').insert(data)
-  if (e) return fail(dbError(e.message, 'Kategori gagal disimpan.'))
+  if (e) return dbFail(e, 'Kategori gagal disimpan.', 400, 'categories')
   revalidateTag('catalog')
   return ok()
 }
@@ -22,7 +22,7 @@ export async function PATCH(req: Request) {
   if (error) return error
   const { id, ...rest } = data
   const { error: e } = await g.admin.from('categories').update({ ...rest, updated_at: new Date().toISOString() }).eq('id', id)
-  if (e) return fail(dbError(e.message, 'Kategori gagal diperbarui.'))
+  if (e) return dbFail(e, 'Kategori gagal diperbarui.', 400, 'categories')
   revalidateTag('catalog')
   return ok()
 }
@@ -35,7 +35,7 @@ export async function DELETE(req: Request) {
   const { count } = await g.admin.from('products').select('id', { count: 'exact', head: true }).eq('category_id', data.id)
   if ((count ?? 0) > 0) return fail(`Masih ada ${count} produk di kategori ini. Pindahkan produknya atau nonaktifkan kategori.`)
   const { error: e } = await g.admin.from('categories').delete().eq('id', data.id)
-  if (e) return fail('Kategori gagal dihapus.')
+  if (e) return dbFail(e, 'Kategori gagal dihapus.', 400, 'categories')
   revalidateTag('catalog')
   return ok()
 }

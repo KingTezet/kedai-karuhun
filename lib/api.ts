@@ -47,6 +47,11 @@ const DB_MESSAGES: Array<[RegExp, (m: RegExpMatchArray) => string]> = [
   [/NEGATIVE_STOCK/, () => 'Stok tidak boleh kurang dari 0.'],
   [/COMPLETED_ORDER_LOCKED|CANCELLED_ORDER_LOCKED/, () => 'Pesanan ini sudah ditutup.'],
   [/FORBIDDEN|UNAUTHORIZED/, () => 'Kamu tidak punya akses.'],
+  [/INVALID_PAYMENT/, () => 'Metode pembayaran tidak valid.'],
+  [/ORDER_NOT_FOUND/, () => 'Pesanan tidak ditemukan.'],
+  [/PHONE_ALREADY_REGISTERED/, () => 'Nomor HP ini sudah terdaftar.'],
+  [/function (public\.)?([a-z_]+)\(.*\) does not exist/i, (m) => `Database belum lengkap (fungsi ${m[2]} tidak ada). Jalankan migration terbaru di Supabase SQL Editor.`],
+  [/column "?([a-z_.]+)"? (of relation "?[a-z_]+"? )?does not exist/i, (m) => `Database belum lengkap (kolom ${m[1]} tidak ada). Jalankan migration terbaru di Supabase SQL Editor.`],
 ]
 
 export function dbError(message: string, fallback = 'Terjadi kesalahan. Coba lagi.') {
@@ -61,4 +66,18 @@ export function dbError(message: string, fallback = 'Terjadi kesalahan. Coba lag
   if (/null value in column/i.test(message)) return 'Ada data pesanan yang belum lengkap. Coba muat ulang lalu ulangi.'
   if (/permission denied|not allowed/i.test(message)) return 'Aksi ini tidak diizinkan untuk akun ini.'
   return fallback
+}
+
+type DbErr = { message: string; code?: string | null; details?: string | null; hint?: string | null }
+
+/**
+ * Failure response for a Supabase/Postgres error. Known errors get a friendly
+ * message; unknown ones keep the fallback but append the DB code + message so
+ * the admin can report the real cause instead of a generic "gagal".
+ */
+export function dbFail(e: DbErr, fallback: string, status = 500, scope = 'db') {
+  console.error(`[${scope}]`, { code: e.code, message: e.message, details: e.details, hint: e.hint })
+  const friendly = dbError(e.message, '')
+  if (friendly) return fail(friendly, status)
+  return fail(`${fallback} (${e.code || 'db'}: ${e.message.slice(0, 140)})`, status)
 }
