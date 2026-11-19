@@ -14,8 +14,17 @@ export async function POST(req: Request) {
   const { data: created, error: e } = await g.admin.from('products').insert({ ...row, stock_quantity: 0 }).select('id').single()
   if (e || !created) return fail(dbError(e?.message ?? '', 'Produk gagal disimpan.'))
   if (initial_stock > 0) {
-    const sb = await createClient()
-    await sb.rpc('adjust_stock', { p_product_id: created.id, p_mode: 'in', p_amount: initial_stock, p_note: 'Stok awal' })
+    const args = { p_product_id: created.id, p_mode: 'in', p_amount: initial_stock, p_note: 'Stok awal' }
+    let { error: se } = await g.admin.rpc('admin_adjust_stock', { ...args, p_actor_id: g.profile.id })
+    if (se && /admin_adjust_stock|could not find the function|PGRST202/i.test(`${se.code ?? ''} ${se.message}`)) {
+      const sb = await createClient()
+      ;({ error: se } = await sb.rpc('adjust_stock', args))
+    }
+    if (se) {
+      console.error('[products] initial stock failed', { code: se.code, message: se.message })
+      revalidateTag('catalog')
+      return ok({ id: created.id, warning: 'Produk tersimpan, tapi stok awal gagal dicatat. Atur stok lewat menu Stok.' })
+    }
   }
   revalidateTag('catalog')
   return ok({ id: created.id })
